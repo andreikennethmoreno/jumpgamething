@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bovga3otceab2" path="res://sprites/shuriken.png" id="2_og67c"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_og67c"]
-radius = 39.0128
+radius = 33.0151
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gp1hk"]
 atlas = ExtResource("2_og67c")
@@ -17,7 +17,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_gp1hk")
 }],
 "loop": true,
-"name": &"default",
+"name": &"shuriken",
 "speed": 5.0
 }]
 
@@ -33,6 +33,7 @@ shape = SubResource("CircleShape2D_og67c")
 position = Vector2(7, 0)
 rotation = -1.5708
 sprite_frames = SubResource("SpriteFrames_qd4js")
+animation = &"shuriken"
 
 [node name="ShootingPoint" type="Marker2D" parent="WeaponPivot/AnimatedSprite2D"]
 unique_name_in_owner = true

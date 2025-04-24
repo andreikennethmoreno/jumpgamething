@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bovga3otceab2" path="res://sprites/shuriken.png" id="2_y25gk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_y25gk"]
-size = Vector2(8.60155, 8.58274)
+size = Vector2(11.6356, 12.5954)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_l5glv"]
 atlas = ExtResource("2_y25gk")
@@ -69,8 +69,9 @@ collision_mask = 3
 script = ExtResource("1_y25gk")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0.0550036, -0.0985315)
-rotation = -0.305612
+position = Vector2(0.0533017, 0.126929)
+rotation = 1.17323
+scale = Vector2(1.02483, 0.924879)
 shape = SubResource("RectangleShape2D_y25gk")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]

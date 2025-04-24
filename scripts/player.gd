@@ -1,82 +1,78 @@
 extends CharacterBody2D
 
 const SPEED = 130.0
-const MIN_JUMP_VELOCITY = -200.0  # small jump
-const MAX_JUMP_VELOCITY = -400.0  # full charge jump
-const MAX_CHARGE_TIME = 1.0  # max time you can charge
-
+const JUMP_VELOCITY = -300.0
+var teleport_target_position: Vector2 = Vector2.ZERO
+var can_teleport = false
+var teleport_cooldown: float = 0.5  # 0.5 seconds cooldown after teleportation
+var teleport_timer: float = 0.0
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
+func _ready():
+	print("gun is ready")
+	var gun = $gun  # Make sure this path is correct
+	if gun:
+		print("Gun found, connecting teleport_ready signal.")
+		# Fix: Use the correct Callable connection
+		gun.connect("teleport_ready", Callable(self, "_on_teleport_ready"))
+	else:
+		print("Gun not found! Check the node path.")
 
-var is_charging = false
-var charge_timer = 0.0
+func _on_teleport_ready(pos: Vector2):
+	print("Teleport signal received with pos: ", pos)
+	teleport_target_position = pos
+	can_teleport = true  # Ensure this is correctly set
+	print("Can teleport is now: ", can_teleport)  # Debug line to check the flag's state
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("teleport") and TeleportManager.can_teleport:
+		# Perform teleportation
+		global_position = TeleportManager.teleport_target_position
+		print("Teleporting to position: ", global_position)
+
+		# Disable further teleportation immediately
+		TeleportManager.can_teleport = false
+		teleport_timer = teleport_cooldown  # Start cooldown timer
+
+		# Optionally, you can play a teleport animation here
+		# animated_sprite.play("teleport")
 
 func _physics_process(delta: float) -> void:
-	# Add gravity if not on the floor
+	if teleport_timer > 0:
+		teleport_timer -= delta  # Reduce cooldown timer
+
+	# Add gravity if in air
 	if not is_on_floor():
 		velocity += get_gravity() * delta
-	else:
-		# Set rotation to 0 when character lands (upright position)
-		rotation = 0
 
-	# Start charging
+	# Jump
 	if Input.is_action_just_pressed("jump") and is_on_floor():
-		is_charging = true
-		charge_timer = 0.0
-		animated_sprite.play("jump")  # 👈 Play jump animation when charging starts
-		print("Start charging")
+		velocity.y = JUMP_VELOCITY
+		print("Jumped.")
 
-	# Keep charging
-	if is_charging and Input.is_action_pressed("jump") and is_on_floor():
-		charge_timer += delta
-		charge_timer = clamp(charge_timer, 0.0, MAX_CHARGE_TIME)
-		# This ensures animation doesn't get stuck if you want to re-trigger
-		if not animated_sprite.is_playing() or animated_sprite.animation != "jump":
-			animated_sprite.play("jump")
-		print("Charging: ", charge_timer)
-
-	# Release to jump
-	if is_charging and Input.is_action_just_released("jump") and is_on_floor():
-		is_charging = false
-		var t = charge_timer / MAX_CHARGE_TIME  # 0 to 1
-		var jump_strength = lerp(MIN_JUMP_VELOCITY, MAX_JUMP_VELOCITY, t)
-		velocity.y = jump_strength
-		print("JUMPED with velocity: ", jump_strength)
-
-	# Reset charge if landed
-	if is_on_floor() and not is_charging:
-		charge_timer = 0.0
-
-	# Handle movement and sprite flipping based on input
+	# Movement input
 	var direction := Input.get_axis("move_left", "move_right")
 
-	# Flip sprites based on direction
+	# Flip sprite
 	if direction > 0:
 		animated_sprite.flip_h = false
-	if direction < 0:
+	elif direction < 0:
 		animated_sprite.flip_h = true
 
-	# Handle animations
-	if is_charging:
-		animated_sprite.play("charge")  # Play charging animation
-	elif not is_on_floor():
-		animated_sprite.play("jump")  # In air (jumping or falling)
-	else:
-		# On floor and not charging
+	# Handle animation
+	if is_on_floor():
 		if direction == 0:
 			animated_sprite.play("idle")
 		else:
 			animated_sprite.play("run")
-
-	# Handle horizontal movement
-	if not is_charging:
-		if direction:
-			velocity.x = direction * SPEED
-		else:
-			velocity.x = move_toward(velocity.x, 0, SPEED)
 	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)  # Smoothly stop if charging
-	
+		animated_sprite.play("jump")
+
+	# Horizontal movement
+	if direction:
+		velocity.x = direction * SPEED
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+
 	move_and_slide()
