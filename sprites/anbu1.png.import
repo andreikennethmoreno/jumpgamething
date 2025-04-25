@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cxpnlfqrmav57"
-path="res://.godot/imported/FX001_02.png-7a0d5614661fc8dcf3c3cff26d82c2ae.ctex"
+uid="uid://c1lojm4xjwwli"
+path="res://.godot/imported/anbu1.png-adc8b09ed8f6e4c50090502f0ccfd6a3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/smoke_FX001/FX001_02.png"
-dest_files=["res://.godot/imported/FX001_02.png-7a0d5614661fc8dcf3c3cff26d82c2ae.ctex"]
+source_file="res://sprites/anbu1.png"
+dest_files=["res://.godot/imported/anbu1.png-adc8b09ed8f6e4c50090502f0ccfd6a3.ctex"]
 
 [params]
 

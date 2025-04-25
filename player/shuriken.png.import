@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4y42gketg5sq"
-path="res://.godot/imported/FX001_01.png-aad1020398863683ec9dc69435963af0.ctex"
+uid="uid://bk5wfbldjq15y"
+path="res://.godot/imported/shuriken.png-623086d6590e7bca4aea7d6fc7d488a1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/smoke_FX001/FX001_01.png"
-dest_files=["res://.godot/imported/FX001_01.png-aad1020398863683ec9dc69435963af0.ctex"]
+source_file="res://player/shuriken.png"
+dest_files=["res://.godot/imported/shuriken.png-623086d6590e7bca4aea7d6fc7d488a1.ctex"]
 
 [params]
 
