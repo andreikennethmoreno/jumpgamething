@@ -20,6 +20,10 @@ func _ready():
 	print("Kunai is ready.")
 
 func _physics_process(delta: float) -> void:
+	print("Emitting teleport_ready signal at: ", global_position)
+	emit_signal("teleport_ready", global_position)  # Emit the signal with position
+
+
 	if is_stuck or !is_ready_to_shoot:
 		return
 
@@ -39,6 +43,8 @@ func _physics_process(delta: float) -> void:
 		anim.play("spinning")
 		print("Kunai missed. Falling started.")
 
+
+
 func _on_body_entered(body: Node2D) -> void:
 	print("Kunai hit something: ", body.name)
 
@@ -53,11 +59,6 @@ func _on_body_entered(body: Node2D) -> void:
 	velocity = Vector2.ZERO
 
 	print("Kunai stuck to: ", body.name)
-
-	print("Emitting teleport_ready signal at: ", global_position)
-	emit_signal("teleport_ready", global_position)  # Emit the signal with position
-
-
 	# Cleanup
 	for child in body.get_children():
 		if child.is_in_group("stuck_bullets"):

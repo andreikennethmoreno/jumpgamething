@@ -4,10 +4,10 @@ const SPEED = 130.0
 const JUMP_VELOCITY = -300.0
 var teleport_target_position: Vector2 = Vector2.ZERO
 var can_teleport = false
-var teleport_cooldown: float = 0.75  # Cooldown after teleportation
-var teleport_timer: float = 0
+var teleport_cooldown: float = 0  # Cooldown after teleportation
+var teleport_timer: float = 0.0
 var smoke_timer: float = 0.0  # Timer to control the smoke animation duration
-var smoke_duration: float = 0.35  # How long smoke animation should play
+var smoke_duration: float = 0.35  # How adlong smoke animation should play
 var just_teleported = false
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -29,22 +29,30 @@ func _on_teleport_ready(pos: Vector2):
 	print("Can teleport is now: ", can_teleport)  # Debug line to check the flag's state
 
 func _physics_process(delta: float) -> void:
-	if teleport_timer > 0:
-		teleport_timer -= delta  # Reduce cooldown timer
-	else:
-		just_teleported = false  # Reset after cooldown
+
 
 	# Add gravity if in air
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-	if Input.is_action_pressed("teleport") and TeleportManager.can_teleport:
+	if teleport_timer > 0.0:
+		teleport_timer -= delta
+		print("Teleport cooling down:", teleport_timer)
+		if teleport_timer <= 0.0:
+			teleport_timer = 0.0
+			just_teleported = false
+			TeleportManager.can_teleport = true  # <-- Reset teleport ability
+	else:
+		just_teleported = false
+
+	if Input.is_action_just_pressed("teleport") and TeleportManager.can_teleport and teleport_timer == 0.0:
 		global_position = TeleportManager.teleport_target_position
-		print("Teleporting to position: ", global_position)
-		just_teleported = true  # Set teleport flag when teleporting
+		print("Teleporting to position:", global_position)
+		just_teleported = true
 		TeleportManager.can_teleport = false
 		teleport_timer = teleport_cooldown
-		smoke_timer = smoke_duration  # Start smoke timer when teleporting
+		smoke_timer = smoke_duration
+
 
 	# Jump
 	if Input.is_action_just_pressed("jump") and is_on_floor():
