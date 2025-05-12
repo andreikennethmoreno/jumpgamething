@@ -67,6 +67,7 @@ rotation = 0.984663
 collision_layer = 0
 collision_mask = 3
 script = ExtResource("1_y25gk")
+metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0.0533017, 0.126929)

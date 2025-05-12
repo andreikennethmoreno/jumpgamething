@@ -9,9 +9,10 @@ var teleport_timer: float = 0.0
 var smoke_timer: float = 0.0  # Timer to control the smoke animation duration
 var smoke_duration: float = 0.35  # How adlong smoke animation should play
 var just_teleported = false
-
+@onready var line_2d: Line2D = $Line2D
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var gun: Area2D = $gun
+@onready var smoke_effect: AudioStreamPlayer2D = $smoke_effect
 
 func _ready():
 	print("gun is ready")
@@ -29,8 +30,6 @@ func _on_teleport_ready(pos: Vector2):
 	print("Can teleport is now: ", can_teleport)  # Debug line to check the flag's state
 
 func _physics_process(delta: float) -> void:
-
-
 	# Add gravity if in air
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -40,10 +39,8 @@ func _physics_process(delta: float) -> void:
 		print("Teleport cooling down:", teleport_timer)
 		if teleport_timer <= 0.0:
 			teleport_timer = 0.0
-			just_teleported = false
-			TeleportManager.can_teleport = true  # <-- Reset teleport ability
-	else:
-		just_teleported = false
+			TeleportManager.can_teleport = true
+
 
 	if Input.is_action_just_pressed("teleport") and TeleportManager.can_teleport and teleport_timer == 0.0:
 		global_position = TeleportManager.teleport_target_position
@@ -52,7 +49,7 @@ func _physics_process(delta: float) -> void:
 		TeleportManager.can_teleport = false
 		teleport_timer = teleport_cooldown
 		smoke_timer = smoke_duration
-
+		smoke_effect.play()
 
 	# Jump
 	if Input.is_action_just_pressed("jump") and is_on_floor():
@@ -83,11 +80,11 @@ func _physics_process(delta: float) -> void:
 	# Handle animation
 	if just_teleported:
 		animated_sprite.play("smoke")
-		smoke_timer -= delta  # Reduce the smoke timer
+		smoke_timer -= delta
 		if smoke_timer <= 0:
-			animated_sprite.stop()  # Stop smoke animation after the duration
-			just_teleported = false  # Reset teleport flag
-		# Hide the gun while the smoke is active
+			animated_sprite.stop()
+			just_teleported = false
+
 		if gun:
 			gun.visible = false
 	else:

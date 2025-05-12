@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://cb5iluuwmfpo1"]
+
+[ext_resource type="Script" uid="uid://cib5kio7fm4l4" path="res://scripts/trajectory_line.gd" id="1_wgm21"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_55cd7"]
+
+[node name="trajectoryLine" type="Line2D"]
+script = ExtResource("1_wgm21")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+shape = SubResource("RectangleShape2D_55cd7")

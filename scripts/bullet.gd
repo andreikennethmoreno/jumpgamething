@@ -5,6 +5,7 @@ var travelled_distance = 0
 const SPEED = 200
 const RANGE = 100
 const GRAVITY = 500.0
+var dir = Vector2.ZERO
 var velocity = Vector2.ZERO
 var is_stuck = false
 var is_falling = false
@@ -18,6 +19,7 @@ signal teleport_ready(global_position)
 func _ready():
 	anim.play("spinning")
 	print("Kunai is ready.")
+	velocity = dir * SPEED
 
 func _physics_process(delta: float) -> void:
 	print("Emitting teleport_ready signal at: ", global_position)
@@ -35,6 +37,8 @@ func _physics_process(delta: float) -> void:
 	var direction = Vector2.RIGHT.rotated(rotation)
 	position += direction * SPEED * delta
 	travelled_distance += SPEED * delta
+
+	velocity.y += GRAVITY * delta
 
 	if travelled_distance > RANGE:
 		is_falling = true

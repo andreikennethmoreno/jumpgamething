@@ -1,10 +1,12 @@
-#gun.gd
+# gun.gd
 extends Area2D
 
 var kunai_thrown = false
 var teleport_target_position: Vector2 = Vector2.ZERO  # Declare teleport_target_position
 
 @onready var animated_sprite_2d: AnimatedSprite2D = $WeaponPivot/AnimatedSprite2D
+@onready var shooting_point: Marker2D = %ShootingPoint
+@onready var weapon_pivot: Marker2D = $WeaponPivot
 
 
 func _process(delta: float) -> void:
@@ -15,15 +17,15 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("shoot") and not kunai_thrown:
 		shoot()
 
-
 func shoot():
 	if kunai_thrown:
 		print("Kunai is not ready to be thrown")
 		return
+
 	const BULLET = preload("res://scenes/bullet.tscn")
 	var new_bullet = BULLET.instantiate()
-	new_bullet.global_position = %ShootingPoint.global_position
-	new_bullet.global_rotation = %ShootingPoint.global_rotation
+	new_bullet.global_position = shooting_point.global_position
+	new_bullet.global_rotation = shooting_point.global_rotation
 	# Connect to kunai_hit_player instead of kunai_stuck
 	new_bullet.connect("kunai_hit_player", Callable(self, "_on_kunai_hit_player"))
 	new_bullet.connect("teleport_ready", Callable(self, "_on_teleport_ready"))
@@ -34,7 +36,6 @@ func shoot():
 
 	kunai_thrown = true
 	print("Kunai shot!")
-
 
 func _on_kunai_hit_player():
 	print("Kunai hit the player! You can shoot again.")
