@@ -39,3 +39,8 @@ position = Vector2(7, 0)
 rotation = -1.5708
 sprite_frames = SubResource("SpriteFrames_qd4js")
 animation = &"shuriken"
+
+[node name="Line2D" type="Line2D" parent="."]
+position = Vector2(12, 1)
+points = PackedVector2Array(0, -1, 0, -1)
+width = 1.0

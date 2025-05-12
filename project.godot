@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 TeleportManager="*res://scripts/teleportManager.gd"
 
+[display]
+
+window/size/mode=2
+
 [input]
 
 move_right={

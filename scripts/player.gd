@@ -9,9 +9,10 @@ var teleport_timer: float = 0.0
 var smoke_timer: float = 0.0  # Timer to control the smoke animation duration
 var smoke_duration: float = 0.35  # How adlong smoke animation should play
 var just_teleported = false
-@onready var line_2d: Line2D = $Line2D
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+
 @onready var gun: Area2D = $gun
+
 @onready var smoke_effect: AudioStreamPlayer2D = $smoke_effect
 
 func _ready():
@@ -22,6 +23,7 @@ func _ready():
 		gun.connect("teleport_ready", Callable(self, "_on_teleport_ready"))
 	else:
 		print("Gun not found! Check the node path.")
+
 
 func _on_teleport_ready(pos: Vector2):
 	print("Teleport signal received with pos: ", pos)
@@ -44,7 +46,8 @@ func _physics_process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("teleport") and TeleportManager.can_teleport and teleport_timer == 0.0:
 		global_position = TeleportManager.teleport_target_position
-		print("Teleporting to position:", global_position)
+		print("player gd: teleport triggered")
+		print("player gd: Teleporting to position:", global_position)
 		just_teleported = true
 		TeleportManager.can_teleport = false
 		teleport_timer = teleport_cooldown

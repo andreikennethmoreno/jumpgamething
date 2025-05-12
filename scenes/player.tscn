@@ -356,5 +356,3 @@ shape = SubResource("CircleShape2D_3vyb7")
 
 [node name="smoke_effect" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("9_ur7pv")
-
-[node name="Line2D" type="Line2D" parent="."]

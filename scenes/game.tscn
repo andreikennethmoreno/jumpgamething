@@ -226,5 +226,3 @@ rotation = 3.14159
 [node name="SpikeTrap3" parent="3_SpikeGroup3" instance=ExtResource("4_lbhrr")]
 position = Vector2(-56, -120)
 rotation = 3.14159
-
-[node name="Line2D" type="Line2D" parent="."]
