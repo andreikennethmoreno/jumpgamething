@@ -8,9 +8,8 @@ var teleport_cooldown: float = 0  # Cooldown after teleportation
 var teleport_timer: float = 0.0
 var smoke_timer: float = 0.0  # Timer to control the smoke animation duration
 var smoke_duration: float = 0.35  # How adlong smoke animation should play
-var just_teleported = false
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
-
+var just_teleported = false
 @onready var gun: Area2D = $gun
 
 @onready var smoke_effect: AudioStreamPlayer2D = $smoke_effect
@@ -26,10 +25,13 @@ func _ready():
 
 
 func _on_teleport_ready(pos: Vector2):
-	print("Teleport signal received with pos: ", pos)
-	teleport_target_position = pos
-	can_teleport = true  # Ensure this is correctly set
-	print("Can teleport is now: ", can_teleport)  # Debug line to check the flag's state
+	if not TeleportManager.can_teleport:
+		print("Teleport signal received with pos: ", pos)
+		TeleportManager.teleport_target_position = pos
+		TeleportManager.can_teleport = true
+		print("Can teleport is now: ", TeleportManager.can_teleport)
+	else:
+		print("Teleport already allowed, ignoring additional signal.")
 
 func _physics_process(delta: float) -> void:
 	# Add gravity if in air
@@ -44,14 +46,14 @@ func _physics_process(delta: float) -> void:
 			TeleportManager.can_teleport = true
 
 
-	if Input.is_action_just_pressed("teleport") and TeleportManager.can_teleport and teleport_timer == 0.0:
+	if Input.is_action_just_pressed("teleport") and TeleportManager.can_teleport and teleport_timer == 0.0 :
 		global_position = TeleportManager.teleport_target_position
 		print("player gd: teleport triggered")
 		print("player gd: Teleporting to position:", global_position)
-		just_teleported = true
 		TeleportManager.can_teleport = false
 		teleport_timer = teleport_cooldown
 		smoke_timer = smoke_duration
+		just_teleported = true
 		smoke_effect.play()
 
 	# Jump

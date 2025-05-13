@@ -8,28 +8,21 @@ var velocity = Vector2.ZERO
 var is_stuck = false
 var is_falling = false
 var is_ready_to_shoot = true
-var has_emitted_teleport = false    # Guard flag
+var has_emitted_teleport = false
 
 @onready var anim = $AnimatedSprite2D
 
 signal kunai_hit_player
-signal teleport_ready(global_position)   # Signal to trigger teleportation
+signal teleport_ready(global_position)
 
 func _ready():
 	anim.play("spinning")
 	print("Kunai is ready.")
 
-# Set the velocity received from the gun
 func set_velocity(new_velocity: Vector2):
 	velocity = new_velocity
 
 func _physics_process(delta: float) -> void:
-	# Emit signal only once when the kunai is ready and stuck
-	if is_stuck and !has_emitted_teleport:
-		emit_signal("teleport_ready", global_position)  # Emit the teleport position
-		has_emitted_teleport = true
-		print("bullet.gd: teleport_ready emitted at:", global_position)
-
 	if is_stuck or not is_ready_to_shoot:
 		return
 
@@ -52,6 +45,11 @@ func _physics_process(delta: float) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	print("Kunai hit something: ", body.name)
 
+	if not has_emitted_teleport:
+		emit_signal("teleport_ready", global_position)
+		has_emitted_teleport = true
+		print("bullet.gd: teleport_ready emitted at", global_position)
+
 	if body.name == "Player":
 		print("Kunai hit the player!")
 		emit_signal("kunai_hit_player")
@@ -63,7 +61,7 @@ func _on_body_entered(body: Node2D) -> void:
 	velocity = Vector2.ZERO
 
 	print("Kunai stuck to: ", body.name)
-	# Cleanup
+
 	for child in body.get_children():
 		if child.is_in_group("stuck_bullets"):
 			body.remove_child(child)

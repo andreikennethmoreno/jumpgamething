@@ -105,6 +105,7 @@ func shoot():
 
 	# Connect to kunai_hit_player instead of kunai_stuck
 	new_bullet.connect("kunai_hit_player", Callable(self, "_on_kunai_hit_player"))
+
 	new_bullet.connect("teleport_ready", Callable(self, "_on_teleport_ready"))
 
 	get_tree().current_scene.add_child(new_bullet)
@@ -118,6 +119,7 @@ func _on_kunai_hit_player():
 	kunai_thrown = false
 	# Show shuriken again when it hits the player
 	animated_sprite_2d.visible = true
+
 
 
 func _on_teleport_ready(pos: Vector2):
