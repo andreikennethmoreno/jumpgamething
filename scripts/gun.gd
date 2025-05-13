@@ -29,16 +29,16 @@ func update_trajectory(delta):
 	var start_pos = shooting_point.global_position
 	var pos       = start_pos
 	var dir       = weapon_pivot.global_transform.x.normalized()
+	var space_state = get_world_2d().direct_space_state
 
 	var travelled = 0.0
 	var vel       = Vector2.ZERO
+	var next_pos: Vector2
 
 	for i in range(max_points):
-		line_2d.add_point(line_2d.to_local(pos))
-
 		if travelled < RANGE:
 			# PHASE 1: straight flight
-			pos += dir * SPEED * delta_time
+			next_pos = pos + dir * SPEED * delta_time
 			travelled += SPEED * delta_time
 
 			if travelled >= RANGE:
@@ -47,7 +47,19 @@ func update_trajectory(delta):
 		else:
 			# PHASE 2: falling under gravity
 			vel.y += GRAVITY * delta_time
-			pos += vel * delta_time
+			next_pos = pos + vel * delta_time
+
+		var query = PhysicsRayQueryParameters2D.create(pos, next_pos)
+		query.exclude = [self]
+		query.collision_mask = 1  # Adjust mask as needed
+
+		var result = space_state.intersect_ray(query)
+		if result:
+			line_2d.add_point(line_2d.to_local(result.position))
+			break
+		else:
+			line_2d.add_point(line_2d.to_local(next_pos))
+			pos = next_pos
 
 		# stop if below ground
 		if pos.y > get_viewport().get_visible_rect().size.y:

@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 const SPEED = 130.0
-const JUMP_VELOCITY = -300.0
+const JUMP_VELOCITY = -250.0
 var teleport_target_position: Vector2 = Vector2.ZERO
 var can_teleport = false
 var teleport_cooldown: float = 0  # Cooldown after teleportation
@@ -15,6 +15,7 @@ var just_teleported = false
 @onready var smoke_effect: AudioStreamPlayer2D = $smoke_effect
 
 func _ready():
+	floor_max_angle = deg_to_rad(43)
 	print("gun is ready")
 	if gun:
 		print("Gun found, connecting teleport_ready signal.")
@@ -38,6 +39,17 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
+	if is_on_wall_only() and velocity.y > 0:
+		var rotation_offset := Vector2(3, 3)
+		if get_real_velocity().x < 0:
+			rotation_offset = Vector2(3, 3)
+		else:
+			rotation_offset = Vector2(-3, 3)
+
+		animated_sprite.flip_h = get_real_velocity().x < 0
+		animated_sprite.offset = rotation_offset
+
+
 	if teleport_timer > 0.0:
 		teleport_timer -= delta
 		print("Teleport cooling down:", teleport_timer)
@@ -55,6 +67,7 @@ func _physics_process(delta: float) -> void:
 		smoke_timer = smoke_duration
 		just_teleported = true
 		smoke_effect.play()
+
 
 	# Jump
 	if Input.is_action_just_pressed("jump") and is_on_floor():
