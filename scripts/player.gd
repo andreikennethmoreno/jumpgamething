@@ -9,13 +9,15 @@ var teleport_timer: float = 0.0
 var smoke_timer: float = 0.0  # Timer to control the smoke animation duration
 var smoke_duration: float = 0.35  # How adlong smoke animation should play
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+
 var just_teleported = false
 @onready var gun: Area2D = $gun
-
+@onready var player_collision: CollisionShape2D = $CollisionShape2D
 @onready var smoke_effect: AudioStreamPlayer2D = $smoke_effect
 
 func _ready():
 	floor_max_angle = deg_to_rad(43)
+
 	print("gun is ready")
 	if gun:
 		print("Gun found, connecting teleport_ready signal.")
@@ -35,11 +37,14 @@ func _on_teleport_ready(pos: Vector2):
 		print("Teleport already allowed, ignoring additional signal.")
 
 func _physics_process(delta: float) -> void:
+
 	# Add gravity if in air
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
 	if is_on_wall_only() and velocity.y > 0:
+		print("rolling")
+
 		var rotation_offset := Vector2(3, 3)
 		if get_real_velocity().x < 0:
 			rotation_offset = Vector2(3, 3)
@@ -47,8 +52,7 @@ func _physics_process(delta: float) -> void:
 			rotation_offset = Vector2(-3, 3)
 
 		animated_sprite.flip_h = get_real_velocity().x < 0
-		animated_sprite.offset = rotation_offset
-
+		#animated_sprite.offset = rotation_offset
 
 	if teleport_timer > 0.0:
 		teleport_timer -= delta
@@ -56,7 +60,6 @@ func _physics_process(delta: float) -> void:
 		if teleport_timer <= 0.0:
 			teleport_timer = 0.0
 			TeleportManager.can_teleport = true
-
 
 	if Input.is_action_just_pressed("teleport") and TeleportManager.can_teleport and teleport_timer == 0.0 :
 		global_position = TeleportManager.teleport_target_position
@@ -67,14 +70,16 @@ func _physics_process(delta: float) -> void:
 		smoke_timer = smoke_duration
 		just_teleported = true
 		smoke_effect.play()
+		gun.visible = false  # hide while in smoke
 
-
+		for kunai in get_tree().get_nodes_in_group("stuck_bullets"):
+			kunai.try_retrieve_on_teleport(self)
 	# Jump
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 		print("Jumped.")
 
-# Movement input
+	# Movement input
 	var direction := Input.get_axis("move_left", "move_right")
 
 	var player_position = global_position
@@ -105,10 +110,15 @@ func _physics_process(delta: float) -> void:
 
 		if gun:
 			gun.visible = false
+
+	#elif is_on_wall_only() and velocity.y > 0:
+		#animated_sprite.play("roll")
+
 	else:
 		# Make the gun visible again after the smoke animation ends
 		if gun:
 			gun.visible = true
+
 		if is_on_floor():
 			if direction == 0:
 				animated_sprite.play("idle")
@@ -124,3 +134,7 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
 	move_and_slide()
+
+func _on_organs_body_entered(body: Node2D) -> void:
+	print("clipping through:" , body)
+	get_tree().reload_current_scene()

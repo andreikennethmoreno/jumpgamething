@@ -1,0 +1,169 @@
+[gd_scene load_steps=11 format=3 uid="uid://liv58sj1qcjk"]
+
+[ext_resource type="Texture2D" uid="uid://bovga3otceab2" path="res://sprites/shuriken.png" id="2_enqxs"]
+
+[sub_resource type="GDScript" id="GDScript_b1e6p"]
+script/source = "extends CharacterBody2D
+
+signal kunai_hit_player
+signal teleport_ready(global_position)
+
+# Tunables
+const SPEED       := 200
+const RANGE       := 100
+const GRAVITY     := 500.0
+const STICK_OFFSET := 2     # pixels off the surface
+
+# State (rename to avoid clashing with the built-in `velocity`)
+var kunai_velocity        : Vector2 = Vector2.ZERO
+var travelled_distance    : float   = 0.0
+var is_falling            : bool    = false
+var is_stuck              : bool    = false
+var ready_to_shoot        : bool    = true
+var has_emitted_teleport  : bool    = false
+
+@onready var anim = $AnimatedSprite2D
+
+func _ready():
+	anim.play(\"spinning\")
+	print(\"Kunai ready.\")
+
+# Rename this so it doesn’t override the engine’s method
+func launch(dir: Vector2) -> void:
+	kunai_velocity = dir.normalized() * SPEED
+	travelled_distance = 0
+	is_falling = false
+	is_stuck = false
+	ready_to_shoot = false
+	has_emitted_teleport = false
+
+func _physics_process(delta: float) -> void:
+	if is_stuck or ready_to_shoot:
+		return
+
+	# Apply gravity
+	if is_falling:
+		kunai_velocity.y += GRAVITY * delta
+	else:
+		kunai_velocity.y = 0
+
+	# Use move_and_slide for natural motion
+	var collision = move_and_slide()
+
+	if is_falling and is_on_floor():
+		_handle_collision(get_last_slide_collision())
+		return
+
+	# Switch to falling after range exceeded
+	if not is_falling:
+		travelled_distance += SPEED * delta
+		if travelled_distance > RANGE:
+			is_falling = true
+			kunai_velocity = Vector2.RIGHT.rotated(rotation) * SPEED
+			anim.play(\"spinning\")
+			print(\"Missed; now falling.\")
+
+func _handle_collision(collision: KinematicCollision2D) -> void:
+	if not has_emitted_teleport:
+		emit_signal(\"teleport_ready\", global_position)
+		has_emitted_teleport = true
+		print(\"Teleport ready at \", global_position)
+
+	var other = collision.collider
+	if other.name == \"Player\":
+		emit_signal(\"kunai_hit_player\")
+		queue_free()
+		return
+
+	is_stuck = true
+	kunai_velocity = Vector2.ZERO
+
+	var contact_pt = collision.position
+	var normal     = collision.normal
+
+	global_position = contact_pt + normal * STICK_OFFSET
+	rotation = normal.angle() + deg_to_rad(90)
+
+	get_parent().remove_child(self)
+	other.add_child(self)
+	# convert back to local coords inside the new parent
+	global_position = other.to_local(contact_pt + normal * STICK_OFFSET)
+
+	$CollisionShape2D.disabled = true
+	anim.play(\"static\")
+	_ready_for_new_shot()
+
+func _ready_for_new_shot() -> void:
+	ready_to_shoot = true
+	print(\"Kunai ready for next shot.\")
+"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4rr31"]
+atlas = ExtResource("2_enqxs")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0k54x"]
+atlas = ExtResource("2_enqxs")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jbub2"]
+atlas = ExtResource("2_enqxs")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_382ok"]
+atlas = ExtResource("2_enqxs")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rc7ug"]
+atlas = ExtResource("2_enqxs")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_10lro"]
+atlas = ExtResource("2_enqxs")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_uflav"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4rr31")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0k54x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jbub2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_382ok")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rc7ug")
+}],
+"loop": true,
+"name": &"spinning",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_10lro")
+}],
+"loop": true,
+"name": &"static",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ny8ei"]
+size = Vector2(9.8995, 9.8995)
+
+[node name="kunai" type="CharacterBody2D"]
+script = SubResource("GDScript_b1e6p")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_uflav")
+animation = &"static"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(3.57628e-07, 0)
+rotation = 0.785398
+shape = SubResource("RectangleShape2D_ny8ei")

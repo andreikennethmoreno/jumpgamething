@@ -3,9 +3,6 @@
 [ext_resource type="Script" uid="uid://c7dk5607ow2dw" path="res://scripts/bullet.gd" id="1_y25gk"]
 [ext_resource type="Texture2D" uid="uid://bovga3otceab2" path="res://sprites/shuriken.png" id="2_y25gk"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_y25gk"]
-size = Vector2(11.6356, 12.5954)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_l5glv"]
 atlas = ExtResource("2_y25gk")
 region = Rect2(0, 0, 16, 16)
@@ -61,23 +58,24 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y25gk"]
+
 [node name="bullet" type="Area2D"]
 top_level = true
-rotation = 0.984663
 collision_layer = 0
 collision_mask = 3
 script = ExtResource("1_y25gk")
-metadata/_edit_group_ = true
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0.0533017, 0.126929)
-rotation = 1.17323
-scale = Vector2(1.02483, 0.924879)
-shape = SubResource("RectangleShape2D_y25gk")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-rotation = 1.96695
+scale = Vector2(1, 1)
 sprite_frames = SubResource("SpriteFrames_eoqba")
 animation = &"static"
 
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.0325394, 0.127572)
+rotation = 0.785398
+scale = Vector2(0.4, 0.4)
+shape = SubResource("RectangleShape2D_y25gk")
+
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://dqnn06kgaan83" path="res://sprites/dotted_line.png" id="3_gp1hk"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_og67c"]
-radius = 33.0151
+radius = 2.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gp1hk"]
 atlas = ExtResource("2_og67c")
@@ -26,6 +26,7 @@ animations = [{
 script = ExtResource("1_og67c")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(7, 0)
 shape = SubResource("CircleShape2D_og67c")
 
 [node name="WeaponPivot" type="Marker2D" parent="."]
