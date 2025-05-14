@@ -60,39 +60,28 @@ func update_trajectory(delta):
 		else:
 			line_2d.add_point(line_2d.to_local(next_pos))
 			pos = next_pos
-
 		# stop if below ground
 		if pos.y > get_viewport().get_visible_rect().size.y:
 			break
 
-
 # Rotate the weapon with the mouse cursor
 func _process(delta):
+		# Rotate gun
 	var mouse_pos = get_global_mouse_position()
 	weapon_pivot.look_at(mouse_pos)
 
-	# Update trajectory when aiming
-	if aiming:
+	# Aiming logic
+	if Input.is_action_pressed("teleport"):
+		aiming = true
 		line_2d.show()
 		update_trajectory(delta)
 	else:
+		aiming = false
 		line_2d.hide()
 
-# The shooting function is triggered by user input, not just by clicking
-func _unhandled_input(event: InputEvent) -> void:
-	# Shoot when left mouse button is pressed and kunai has not been thrown
-	if event.is_action_pressed("shoot") and not kunai_thrown:
+	# Allow shooting even while aiming
+	if Input.is_action_just_pressed("shoot") and not kunai_thrown:
 		shoot()
-
-	# Handle teleportation with right mouse button
-	if event.is_action_pressed("teleport"):
-		aiming = true
-		print("gun.gd: teleport triggered")
-
-	elif event.is_action_released("teleport"):
-		aiming = false
-		line_2d.hide()  # Hide trajectory when right-click is released
-
 
 # Shooting logic
 func shoot():
@@ -133,9 +122,7 @@ func _on_kunai_hit_player():
 	animated_sprite_2d.visible = true
 
 
-
 func _on_teleport_ready(pos: Vector2):
-
 	print("gun.gd: Teleport signal received with pos: ", pos)
 	TeleportManager.teleport_target_position = pos
 	TeleportManager.can_teleport = true
