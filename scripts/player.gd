@@ -9,11 +9,15 @@ var teleport_timer: float = 0.0
 var smoke_timer: float = 0.0  # Timer to control the smoke animation duration
 var smoke_duration: float = 0.35  # How adlong smoke animation should play
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+var is_hit = false
+var knockback_timer := 0.3
+
 
 var just_teleported = false
 @onready var gun: Area2D = $gun
 @onready var player_collision: CollisionShape2D = $CollisionShape2D
 @onready var smoke_effect: AudioStreamPlayer2D = $smoke_effect
+@onready var hit_sound: AudioStreamPlayer2D = $hit_sound
 
 func _ready():
 	floor_max_angle = deg_to_rad(43)
@@ -37,6 +41,12 @@ func _on_teleport_ready(pos: Vector2):
 		print("Teleport already allowed, ignoring additional signal.")
 
 func _physics_process(delta: float) -> void:
+	if is_hit:
+		move_and_slide()
+		knockback_timer -= delta
+		if knockback_timer <= 0.0:
+			is_hit = false
+		return
 
 	# Add gravity if in air
 	if not is_on_floor():
@@ -138,3 +148,12 @@ func _physics_process(delta: float) -> void:
 func _on_organs_body_entered(body: Node2D) -> void:
 	print("clipping through:" , body)
 	get_tree().reload_current_scene()
+
+func hit(knockback: Vector2) -> void:
+	is_hit = true
+	# disable further input/physics
+	velocity = knockback
+	hit_sound.play()
+	# play die animation
+	animated_sprite.play("hit")
+	knockback_timer = 0.3

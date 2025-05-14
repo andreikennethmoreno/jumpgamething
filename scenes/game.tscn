@@ -392,3 +392,23 @@ rotation = 3.14159
 [node name="SpikeTrap3" parent="3_SpikeGroup3" instance=ExtResource("4_lbhrr")]
 position = Vector2(-56, -120)
 rotation = 3.14159
+
+[node name="3_SpikeGroup4" type="Node" parent="."]
+
+[node name="SpikeTrap8" parent="3_SpikeGroup4" instance=ExtResource("4_lbhrr")]
+position = Vector2(72, -120)
+
+[node name="SpikeTrap6" parent="3_SpikeGroup4" instance=ExtResource("4_lbhrr")]
+position = Vector2(-56, -232)
+
+[node name="SpikeTrap5" parent="3_SpikeGroup4" instance=ExtResource("4_lbhrr")]
+position = Vector2(-56, -152)
+
+[node name="SpikeTrap3" parent="3_SpikeGroup4" instance=ExtResource("4_lbhrr")]
+position = Vector2(-56, 8)
+
+[node name="SpikeTrap4" parent="3_SpikeGroup4" instance=ExtResource("4_lbhrr")]
+position = Vector2(-56, -72)
+
+[node name="SpikeTrap7" parent="3_SpikeGroup4" instance=ExtResource("4_lbhrr")]
+position = Vector2(72, -200)

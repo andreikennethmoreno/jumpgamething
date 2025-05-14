@@ -92,12 +92,14 @@ func _stick_to(body: Node2D) -> void:
 	get_parent().remove_child(self)
 	body.add_child(self)
 
-	# NEW: Nudge the kunai slightly out of the wall
-	var stick_offset = Vector2.RIGHT.rotated(rotation) * -4  # Pull back a bit
-	global_position = hit_pos + stick_offset
+
 
 	$CollisionShape2D.disabled = true
 	anim.play("static")
+
+	# NEW: Nudge the kunai slightly out of the wall
+	var stick_offset = Vector2.RIGHT.rotated(rotation) * -4  # Pull back a bit
+	global_position = hit_pos + stick_offset
 
 	_ready_for_new_shot()
 
