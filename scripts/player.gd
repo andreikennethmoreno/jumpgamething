@@ -1,4 +1,4 @@
-extends CharacterBody2D
+extends CharacterBody2D #player.gd
 
 const SPEED = 130.0
 const JUMP_VELOCITY = -250.0

@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bx05t6wg816ht" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="Texture2D" uid="uid://bf07s578la5jp" path="res://sprites/world_tileset.png" id="2_yqjtg"]
 [ext_resource type="Texture2D" uid="uid://dubn0d8113co" path="res://sprites/world_tileset_slopes.png" id="4_iywne"]
-[ext_resource type="PackedScene" uid="uid://ltbvgaofitcg" path="res://scenes/pressureplate_tra[.tscn" id="4_lbhrr"]
+[ext_resource type="PackedScene" uid="uid://ltbvgaofitcg" path="res://scenes/pressureplate_trap.tscn" id="4_lbhrr"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yqjtg"]
 texture = ExtResource("2_yqjtg")

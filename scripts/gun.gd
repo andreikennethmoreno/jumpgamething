@@ -1,4 +1,4 @@
-extends Area2D
+extends Area2D #gun.gd
 
 var kunai_thrown = false
 var teleport_target_position: Vector2 = Vector2.ZERO  # Declare teleport_target_position
@@ -70,6 +70,10 @@ func _process(delta):
 	var mouse_pos = get_global_mouse_position()
 	weapon_pivot.look_at(mouse_pos)
 
+		# Allow shooting even while aiming
+	if Input.is_action_just_pressed("shoot") and not kunai_thrown:
+		shoot()
+
 	# Aiming logic
 	if Input.is_action_pressed("teleport"):
 		aiming = true
@@ -78,10 +82,6 @@ func _process(delta):
 	else:
 		aiming = false
 		line_2d.hide()
-
-	# Allow shooting even while aiming
-	if Input.is_action_just_pressed("shoot") and not kunai_thrown:
-		shoot()
 
 # Shooting logic
 func shoot():
@@ -109,6 +109,9 @@ func shoot():
 
 	new_bullet.connect("teleport_ready", Callable(self, "_on_teleport_ready"))
 
+	#new_bullet.connect("kunai_destroyed", Callable(self, "_on_kunai_destroyed"))
+
+
 	get_tree().current_scene.add_child(new_bullet)
 	# Hide shuriken after shooting
 	animated_sprite_2d.visible = false
@@ -120,6 +123,11 @@ func _on_kunai_hit_player():
 	kunai_thrown = false
 	# Show shuriken again when it hits the player
 	animated_sprite_2d.visible = true
+
+#func _on_kunai_destroyed():
+	#kunai_thrown = false
+	#animated_sprite_2d.visible = true
+	#print("Kunai destroyed. Ready for next shot.")
 
 
 func _on_teleport_ready(pos: Vector2):

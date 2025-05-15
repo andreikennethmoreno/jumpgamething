@@ -58,8 +58,8 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_y25gk"]
-radius = 9.28217
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y25gk"]
+size = Vector2(21.9989, 21.9989)
 
 [node name="bullet" type="Area2D"]
 top_level = true
@@ -73,10 +73,10 @@ sprite_frames = SubResource("SpriteFrames_eoqba")
 animation = &"static"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-0.0325394, 0.127572)
+position = Vector2(-3.72529e-09, 5.96046e-08)
 rotation = 0.785398
 scale = Vector2(0.45, 0.45)
-shape = SubResource("CircleShape2D_y25gk")
+shape = SubResource("RectangleShape2D_y25gk")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]

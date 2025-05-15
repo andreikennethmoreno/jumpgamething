@@ -307,8 +307,9 @@ animations = [{
 "speed": 8.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_y4r1p"]
-size = Vector2(11, 16)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_y4r1p"]
+radius = 5.0
+height = 14.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ur7pv"]
 radius = 4.12311
@@ -332,8 +333,8 @@ animation = &"idle"
 autoplay = "idle"
 
 [node name="CharacterCollision" type="CollisionShape2D" parent="."]
-position = Vector2(-0.5, -8)
-shape = SubResource("RectangleShape2D_y4r1p")
+position = Vector2(0, -7)
+shape = SubResource("CapsuleShape2D_y4r1p")
 
 [node name="smoke_effect" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("9_ur7pv")
@@ -341,7 +342,7 @@ stream = ExtResource("9_ur7pv")
 [node name="Organs" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Organs"]
-position = Vector2(-1, -9)
+position = Vector2(0, -9)
 shape = SubResource("CircleShape2D_ur7pv")
 
 [node name="hit_sound" type="AudioStreamPlayer2D" parent="."]
