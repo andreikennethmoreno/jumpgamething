@@ -1,7 +1,7 @@
 extends Area2D
 
 @onready var timer: Timer = $Timer
-const KNOCKBACK_FORCE := 1000.0
+const KNOCKBACK_FORCE := 500.0
 const UPWARD_BIAS := 0.4  # how much of the force always goes up
 #const DOWNWARD_BIAS := -0.4  # how much of the force always goes up
 @onready var animated_sprite_trap: AnimatedSprite2D = $AnimatedSprite2D

@@ -183,7 +183,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"hit",
-"speed": 6.0
+"speed": 4.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -329,8 +329,9 @@ position = Vector2(1, -6)
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
-animation = &"idle"
+animation = &"hit"
 autoplay = "idle"
+frame_progress = 0.592456
 
 [node name="CharacterCollision" type="CollisionShape2D" parent="."]
 position = Vector2(0, -7)

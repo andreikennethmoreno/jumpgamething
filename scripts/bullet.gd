@@ -78,8 +78,8 @@ func _on_body_exited(body: Node2D) -> void:
 		print(body.name, "exited kunai area.")
 
 
-const FLOOR_STICK_DEPTH = 1
-const WALL_STICK_DEPTH = 1
+const FLOOR_STICK_DEPTH = 2
+const WALL_STICK_DEPTH = 2
 
 
 func _stick_to(body: Node2D) -> void:
