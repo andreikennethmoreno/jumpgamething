@@ -1,9 +1,8 @@
-[gd_scene load_steps=11 format=4 uid="uid://uhulcxy0lu23"]
+[gd_scene load_steps=10 format=4 uid="uid://uhulcxy0lu23"]
 
 [ext_resource type="Script" uid="uid://kc4ceuygrwcs" path="res://scripts/game.gd" id="1_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://bx05t6wg816ht" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="Texture2D" uid="uid://bf07s578la5jp" path="res://sprites/world_tileset.png" id="2_yqjtg"]
-[ext_resource type="Script" uid="uid://djg4y1mq6jtrm" path="res://scripts/camera_2d.gd" id="3_p57ef"]
 [ext_resource type="Texture2D" uid="uid://dubn0d8113co" path="res://sprites/world_tileset_slopes.png" id="4_iywne"]
 [ext_resource type="PackedScene" uid="uid://ltbvgaofitcg" path="res://scenes/pressureplate_trap.tscn" id="4_lbhrr"]
 
@@ -337,11 +336,10 @@ script = ExtResource("1_lnu2h")
 position = Vector2(-120, 8)
 metadata/_edit_group_ = true
 
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(-120, -5)
-zoom = Vector2(4, 4)
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position = Vector2(0, -13)
+zoom = Vector2(3, 3)
 position_smoothing_enabled = true
-script = ExtResource("3_p57ef")
 
 [node name="TileMap" type="Node" parent="."]
 

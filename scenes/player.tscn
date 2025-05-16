@@ -324,14 +324,13 @@ floor_max_angle = 0.750492
 script = ExtResource("1_g2els")
 
 [node name="gun" parent="." instance=ExtResource("2_qhqgy")]
-position = Vector2(1, -6)
+position = Vector2(-1, -7)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
-animation = &"hit"
+animation = &"death"
 autoplay = "idle"
-frame_progress = 0.592456
 
 [node name="CharacterCollision" type="CollisionShape2D" parent="."]
 position = Vector2(0, -7)

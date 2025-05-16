@@ -124,10 +124,6 @@ func _on_kunai_hit_player():
 	# Show shuriken again when it hits the player
 	animated_sprite_2d.visible = true
 
-#func _on_kunai_destroyed():
-	#kunai_thrown = false
-	#animated_sprite_2d.visible = true
-	#print("Kunai destroyed. Ready for next shot.")
 
 
 func _on_teleport_ready(pos: Vector2):
