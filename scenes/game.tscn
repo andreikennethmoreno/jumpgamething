@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=4 uid="uid://uhulcxy0lu23"]
+[gd_scene load_steps=11 format=4 uid="uid://uhulcxy0lu23"]
 
 [ext_resource type="Script" uid="uid://kc4ceuygrwcs" path="res://scripts/game.gd" id="1_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://bx05t6wg816ht" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="Texture2D" uid="uid://bf07s578la5jp" path="res://sprites/world_tileset.png" id="2_yqjtg"]
 [ext_resource type="Texture2D" uid="uid://dubn0d8113co" path="res://sprites/world_tileset_slopes.png" id="4_iywne"]
 [ext_resource type="PackedScene" uid="uid://ltbvgaofitcg" path="res://scenes/pressureplate_trap.tscn" id="4_lbhrr"]
+[ext_resource type="PackedScene" uid="uid://ghe2ctwu642i" path="res://scenes/health_potion.tscn" id="6_p57ef"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yqjtg"]
 texture = ExtResource("2_yqjtg")
@@ -338,7 +339,7 @@ metadata/_edit_group_ = true
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position = Vector2(0, -13)
-zoom = Vector2(3, 3)
+zoom = Vector2(4, 4)
 position_smoothing_enabled = true
 
 [node name="TileMap" type="Node" parent="."]
@@ -418,3 +419,29 @@ position = Vector2(-56, -72)
 
 [node name="SpikeTrap7" parent="3_SpikeGroup4" instance=ExtResource("4_lbhrr")]
 position = Vector2(72, -200)
+
+[node name="potions" type="Node" parent="."]
+
+[node name="health_potion8" parent="potions" instance=ExtResource("6_p57ef")]
+position = Vector2(-200, 0)
+
+[node name="health_potion7" parent="potions" instance=ExtResource("6_p57ef")]
+position = Vector2(-352, 0)
+
+[node name="health_potion6" parent="potions" instance=ExtResource("6_p57ef")]
+position = Vector2(-328, 0)
+
+[node name="health_potion5" parent="potions" instance=ExtResource("6_p57ef")]
+position = Vector2(-304, 0)
+
+[node name="health_potion4" parent="potions" instance=ExtResource("6_p57ef")]
+position = Vector2(-280, 0)
+
+[node name="health_potion3" parent="potions" instance=ExtResource("6_p57ef")]
+position = Vector2(-256, 0)
+
+[node name="health_potion" parent="potions" instance=ExtResource("6_p57ef")]
+position = Vector2(-168, 0)
+
+[node name="health_potion2" parent="potions" instance=ExtResource("6_p57ef")]
+position = Vector2(-224, 0)

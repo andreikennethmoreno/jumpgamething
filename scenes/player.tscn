@@ -317,12 +317,14 @@ radius = 4.12311
 
 [node name="Player" type="CharacterBody2D"]
 z_index = 5
+position = Vector2(0, 1)
 collision_layer = 2
 slide_on_ceiling = false
 floor_stop_on_slope = false
 floor_constant_speed = true
 floor_max_angle = 0.750492
 script = ExtResource("1_g2els")
+metadata/_edit_group_ = true
 
 [node name="gun" parent="." instance=ExtResource("2_qhqgy")]
 position = Vector2(-1, -7)
@@ -369,8 +371,50 @@ layout_mode = 2
 
 [node name="heart" parent="healthbar/HBoxContainer/heart2" instance=ExtResource("11_d2wvv")]
 
+[node name="heart3" type="TextureRect" parent="healthbar/HBoxContainer"]
+custom_minimum_size = Vector2(45.255, 0)
+layout_mode = 2
+
+[node name="heart" parent="healthbar/HBoxContainer/heart3" instance=ExtResource("11_d2wvv")]
+
+[node name="heart4" type="TextureRect" parent="healthbar/HBoxContainer"]
+custom_minimum_size = Vector2(45.255, 0)
+layout_mode = 2
+
+[node name="heart" parent="healthbar/HBoxContainer/heart4" instance=ExtResource("11_d2wvv")]
+
+[node name="heart5" type="TextureRect" parent="healthbar/HBoxContainer"]
+custom_minimum_size = Vector2(45.255, 0)
+layout_mode = 2
+
+[node name="heart" parent="healthbar/HBoxContainer/heart5" instance=ExtResource("11_d2wvv")]
+
+[node name="heart6" type="TextureRect" parent="healthbar/HBoxContainer"]
+custom_minimum_size = Vector2(45.255, 0)
+layout_mode = 2
+
+[node name="heart" parent="healthbar/HBoxContainer/heart6" instance=ExtResource("11_d2wvv")]
+
+[node name="heart7" type="TextureRect" parent="healthbar/HBoxContainer"]
+custom_minimum_size = Vector2(45.255, 0)
+layout_mode = 2
+
+[node name="heart" parent="healthbar/HBoxContainer/heart7" instance=ExtResource("11_d2wvv")]
+
+[node name="heart8" type="TextureRect" parent="healthbar/HBoxContainer"]
+custom_minimum_size = Vector2(45.255, 0)
+layout_mode = 2
+
+[node name="heart" parent="healthbar/HBoxContainer/heart8" instance=ExtResource("11_d2wvv")]
+
+[node name="heart9" type="TextureRect" parent="healthbar/HBoxContainer"]
+custom_minimum_size = Vector2(45.255, 0)
+layout_mode = 2
+
+[node name="heart" parent="healthbar/HBoxContainer/heart9" instance=ExtResource("11_d2wvv")]
+
 [node name="DeathTimer" type="Timer" parent="."]
-wait_time = 5.0
+wait_time = 3.0
 one_shot = true
 
 [connection signal="body_entered" from="Organs" to="." method="_on_organs_body_entered"]

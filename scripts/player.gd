@@ -12,9 +12,10 @@ var smoke_duration: float = 0.35  # How adlong smoke animation should play
 var is_hit = false
 var knockback_timer := 0.3
 var just_teleported = false
-var hearts_list : Array[TextureRect]
-var health = 2
+var hearts_list : Array[TextureRect] = []
+var health = 1
 var is_dead = false
+var _suffocating := false
 
 
 @onready var gun: Area2D = $gun
@@ -26,8 +27,15 @@ var is_dead = false
 func _ready():
 	#floor_max_angle = deg_to_rad(43)
 	var hearts_parent = $healthbar/HBoxContainer
+	hearts_list = []  # Ensure it's empty before filling
 	for child in hearts_parent.get_children():
-		hearts_list.append(child)
+		if child is TextureRect:
+			hearts_list.append(child)
+	print("Hearts loaded:", hearts_list.size())
+	update_heart_display()
+
+
+
 	print(hearts_list)
 
 	print("gun is ready")
@@ -53,6 +61,12 @@ func _on_teleport_ready(pos: Vector2):
 func _physics_process(delta: float) -> void:
 	if is_dead:
 		return
+
+	if _suffocating:
+		velocity.y = 0  # stop vertical movement
+		velocity.x = 0  # optional: stop horizontal movement if you want
+		move_and_slide()
+		return  # skip rest of movement and gravity when suffocating
 
 	if is_hit:
 		move_and_slide()
@@ -156,8 +170,19 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func _on_organs_body_entered(body: Node2D) -> void:
-	print("clipping through:" , body)
-	get_tree().reload_current_scene()
+	if _suffocating:
+		return
+	_suffocating = true
+	set_process_input(false)         # stops _input() from being called :contentReference[oaicite:0]{index=0}
+	while _suffocating:
+		hit(Vector2.ZERO)
+		update_heart_display()
+		print("player.gd: player is suffocating")
+		await get_tree().create_timer(0.5).timeout
+		if health <= 0:
+			_suffocating = false
+			# Death and reload handled elsewhere
+			set_process_input(true)
 
 func hit(knockback: Vector2) -> void:
 	if is_dead:
@@ -182,6 +207,11 @@ func hit(knockback: Vector2) -> void:
 	# play die animation
 	animated_sprite.play("hit")
 	knockback_timer = 0.3
+
+func heal() -> void:
+	print("player.gd: healing")
+	health += 1
+	update_heart_display()
 
 func update_heart_display():
 	for i in range(hearts_list.size()):

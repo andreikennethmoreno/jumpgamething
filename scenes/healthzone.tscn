@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c3vnyc0yfyy3r"]
+
+[ext_resource type="Script" uid="uid://y7j1j04bl8v" path="res://scripts/healthzone.gd" id="1_d0os8"]
+
+[node name="healthzone" type="Area2D"]
+script = ExtResource("1_d0os8")
