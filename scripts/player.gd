@@ -2,25 +2,33 @@ extends CharacterBody2D #player.gd
 
 const SPEED = 130.0
 const JUMP_VELOCITY = -250.0
+
 var teleport_target_position: Vector2 = Vector2.ZERO
 var can_teleport = false
 var teleport_cooldown: float = 0  # Cooldown after teleportation
 var teleport_timer: float = 0.0
 var smoke_timer: float = 0.0  # Timer to control the smoke animation duration
 var smoke_duration: float = 0.35  # How adlong smoke animation should play
-@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 var is_hit = false
 var knockback_timer := 0.3
-
-
 var just_teleported = false
+var hearts_list : Array[TextureRect]
+var health = 2
+var is_dead = false
+
+
 @onready var gun: Area2D = $gun
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var player_collision: CollisionShape2D = $CollisionShape2D
 @onready var smoke_effect: AudioStreamPlayer2D = $smoke_effect
 @onready var hit_sound: AudioStreamPlayer2D = $hit_sound
 
 func _ready():
-	floor_max_angle = deg_to_rad(43)
+	#floor_max_angle = deg_to_rad(43)
+	var hearts_parent = $healthbar/HBoxContainer
+	for child in hearts_parent.get_children():
+		hearts_list.append(child)
+	print(hearts_list)
 
 	print("gun is ready")
 	if gun:
@@ -29,6 +37,8 @@ func _ready():
 		gun.connect("teleport_ready", Callable(self, "_on_teleport_ready"))
 	else:
 		print("Gun not found! Check the node path.")
+
+	gun.set("player_ref", self)
 
 
 func _on_teleport_ready(pos: Vector2):
@@ -41,6 +51,9 @@ func _on_teleport_ready(pos: Vector2):
 		print("Teleport already allowed, ignoring additional signal.")
 
 func _physics_process(delta: float) -> void:
+	if is_dead:
+		return
+
 	if is_hit:
 		move_and_slide()
 		knockback_timer -= delta
@@ -109,7 +122,6 @@ func _physics_process(delta: float) -> void:
 	elif direction < 0:
 		animated_sprite.flip_h = true
 
-
 	# Handle animation
 	if just_teleported:
 		animated_sprite.play("smoke")
@@ -121,9 +133,6 @@ func _physics_process(delta: float) -> void:
 		if gun:
 			gun.visible = false
 
-	#elif is_on_wall_only() and velocity.y > 0:
-		#animated_sprite.play("roll")
-
 	else:
 		# Make the gun visible again after the smoke animation ends
 		if gun:
@@ -132,6 +141,7 @@ func _physics_process(delta: float) -> void:
 		if is_on_floor():
 			if direction == 0:
 				animated_sprite.play("idle")
+
 			else:
 				animated_sprite.play("run")
 		else:
@@ -150,6 +160,21 @@ func _on_organs_body_entered(body: Node2D) -> void:
 	get_tree().reload_current_scene()
 
 func hit(knockback: Vector2) -> void:
+	if is_dead:
+		return
+
+	health -=1
+	update_heart_display()
+		# player is dead
+
+	if health <= 0:
+		is_dead = true
+		# Play death animation once, start your 2s timer
+		animated_sprite.play("death")
+		#gun.visible = false
+		$DeathTimer.start()
+		return
+
 	is_hit = true
 	# disable further input/physics
 	velocity = knockback
@@ -157,3 +182,15 @@ func hit(knockback: Vector2) -> void:
 	# play die animation
 	animated_sprite.play("hit")
 	knockback_timer = 0.3
+
+func update_heart_display():
+	for i in range(hearts_list.size()):
+		hearts_list[i].visible = i < health
+
+	if health == 1:
+		hearts_list[0].get_child(0).play("beating")
+	elif health > 1:
+		hearts_list[0].get_child(0).play("idle")
+
+func _on_death_timer_timeout() -> void:
+	get_tree().reload_current_scene()

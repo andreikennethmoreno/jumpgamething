@@ -2,7 +2,7 @@ extends Area2D #gun.gd
 
 var kunai_thrown = false
 var teleport_target_position: Vector2 = Vector2.ZERO  # Declare teleport_target_position
-
+@export var player_ref: CharacterBody2D
 @onready var animated_sprite_2d: AnimatedSprite2D = $WeaponPivot/AnimatedSprite2D
 @onready var shooting_point: Marker2D = %ShootingPoint
 @onready var weapon_pivot: Marker2D = $WeaponPivot
@@ -66,6 +66,10 @@ func update_trajectory(delta):
 
 # Rotate the weapon with the mouse cursor
 func _process(delta):
+	if player_ref == null or player_ref.is_dead:
+		# player is dead → keep the sprite visible, but do nothing
+		return
+
 		# Rotate gun
 	var mouse_pos = get_global_mouse_position()
 	weapon_pivot.look_at(mouse_pos)
