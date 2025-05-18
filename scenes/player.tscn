@@ -317,7 +317,6 @@ radius = 4.12311
 
 [node name="Player" type="CharacterBody2D"]
 z_index = 5
-position = Vector2(0, 1)
 collision_layer = 2
 slide_on_ceiling = false
 floor_stop_on_slope = false
