@@ -1,9 +1,10 @@
 extends Area2D #bullet.gd
 
 var travelled_distance = 0
-const SPEED = 200
-const RANGE = 100
-const GRAVITY = 500.0
+
+#const SPEED = 200
+#const RANGE = 100
+#const GRAVITY = 500.0
 
 var velocity = Vector2.ZERO
 var is_stuck = false
@@ -33,21 +34,24 @@ func _physics_process(delta):
 		return
 
 	if is_falling:
-		velocity.y += GRAVITY * delta
+		velocity.y += WeaponSettings.GRAVITY * delta
 		position += velocity * delta
 		return
 
-	# Fly forward
-	var dir = Vector2.RIGHT.rotated(rotation)
-	position += dir * SPEED * delta
-	travelled_distance += SPEED * delta
+	# Regular flight
+	velocity.y += WeaponSettings.GRAVITY * delta
+	position += velocity * delta
+	travelled_distance += velocity.length() * delta
 
-	if travelled_distance > RANGE:
+	if travelled_distance >= WeaponSettings.RANGE and not is_falling:
 		is_falling = true
-		velocity = dir * SPEED
-		velocity.y = 0
-		anim.play("spinning")
-		print("Kunai missed. Falling started.")
+
+	#if travelled_distance > WeaponSettings.RANGE:
+		#is_falling = true
+		#velocity = dir * WeaponSettings.SPEED
+		#velocity.y = 0
+		#anim.play("spinning")
+		#print("Kunai missed. Falling started.")
 
 # --- ENTRY/EXIT TRACKING ---
 func _on_body_entered(body: Node2D) -> void:
