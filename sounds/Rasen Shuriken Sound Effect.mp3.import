@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://ceua3niawahsv"
+path="res://.godot/imported/Rasen Shuriken Sound Effect.mp3-f4af3dfda36c49c460fab8870f367123.mp3str"
+
+[deps]
+
+source_file="res://sounds/Rasen Shuriken Sound Effect.mp3"
+dest_files=["res://.godot/imported/Rasen Shuriken Sound Effect.mp3-f4af3dfda36c49c460fab8870f367123.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

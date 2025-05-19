@@ -3,12 +3,13 @@ extends CharacterBody2D #player.gd
 const SPEED = 130.0
 const JUMP_VELOCITY = -250.0
 
+var input_enabled: bool = true
 var teleport_target_position: Vector2 = Vector2.ZERO
 var can_teleport = false
 var teleport_cooldown: float = 0  # Cooldown after teleportation
 var teleport_timer: float = 0.0
 var smoke_timer: float = 0.0  # Timer to control the smoke animation duration
-var smoke_duration: float = 0.35  # How adlong smoke animation should play
+var smoke_duration: float = 0.1  # How adlong smoke animation should play
 var is_hit = false
 var knockback_timer := 0.3
 var just_teleported = false
@@ -59,6 +60,21 @@ func _on_teleport_ready(pos: Vector2):
 		print("Teleport already allowed, ignoring additional signal.")
 
 func _physics_process(delta: float) -> void:
+	var player_position = global_position
+
+	# Get mouse position relative to the screen
+	var mouse_position = get_global_mouse_position() - player_position
+
+		# Flip sprite based on mouse positinn
+	if mouse_position.x < 0:  # Mouse on the left side
+		animated_sprite.flip_h = true
+	elif mouse_position.x > 0:  # Mouse on the right side
+		animated_sprite.flip_h = false
+
+
+	if not input_enabled:
+		return
+
 	if is_dead:
 		return
 
@@ -119,16 +135,6 @@ func _physics_process(delta: float) -> void:
 	# Movement input
 	var direction := Input.get_axis("move_left", "move_right")
 
-	var player_position = global_position
-
-	# Get mouse position relative to the screen
-	var mouse_position = get_global_mouse_position() - player_position
-
-	# Flip sprite based on mouse position
-	if mouse_position.x < 0:  # Mouse on the left side
-		animated_sprite.flip_h = true
-	elif mouse_position.x > 0:  # Mouse on the right side
-		animated_sprite.flip_h = false
 
 	# Override with input direction (if applicable)
 	if direction > 0:
@@ -143,10 +149,8 @@ func _physics_process(delta: float) -> void:
 		if smoke_timer <= 0:
 			animated_sprite.stop()
 			just_teleported = false
-
 		if gun:
 			gun.visible = false
-
 	else:
 		# Make the gun visible again after the smoke animation ends
 		if gun:
@@ -155,7 +159,6 @@ func _physics_process(delta: float) -> void:
 		if is_on_floor():
 			if direction == 0:
 				animated_sprite.play("idle")
-
 			else:
 				animated_sprite.play("run")
 		else:
@@ -182,7 +185,7 @@ func _on_organs_body_entered(body: Node2D) -> void:
 		if health <= 0:
 			_suffocating = false
 			# Death and reload handled elsewhere
-			set_process_input(true)
+			disable_input()
 
 func hit(knockback: Vector2) -> void:
 	if is_dead:
@@ -224,3 +227,9 @@ func update_heart_display():
 
 func _on_death_timer_timeout() -> void:
 	get_tree().reload_current_scene()
+
+func disable_input():
+	input_enabled = false
+
+func enable_input():
+	input_enabled = true

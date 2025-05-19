@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=4 uid="uid://uhulcxy0lu23"]
+[gd_scene load_steps=12 format=4 uid="uid://uhulcxy0lu23"]
 
 [ext_resource type="Script" uid="uid://kc4ceuygrwcs" path="res://scripts/game.gd" id="1_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://bx05t6wg816ht" path="res://scenes/player.tscn" id="1_uwrxv"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://dubn0d8113co" path="res://sprites/world_tileset_slopes.png" id="4_iywne"]
 [ext_resource type="Script" uid="uid://cioe5sbeu8o87" path="res://scenes/transition_camera.gd" id="5_u5sy4"]
 [ext_resource type="PackedScene" uid="uid://ghe2ctwu642i" path="res://scenes/health_potion.tscn" id="6_p57ef"]
+[ext_resource type="PackedScene" uid="uid://ltbvgaofitcg" path="res://scenes/pressureplate_trap.tscn" id="6_u5sy4"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yqjtg"]
 texture = ExtResource("2_yqjtg")
@@ -368,6 +369,9 @@ position = Vector2(0, -13)
 zoom = Vector2(3, 3)
 position_smoothing_enabled = true
 script = ExtResource("5_u5sy4")
+
+[node name="PressurePlateTrap" parent="TileMap" instance=ExtResource("6_u5sy4")]
+position = Vector2(-176, -184)
 
 [node name="potions" type="Node" parent="."]
 

@@ -7,18 +7,26 @@ var teleport_target_position: Vector2 = Vector2.ZERO  # Declare teleport_target_
 @onready var shooting_point: Marker2D = %ShootingPoint
 @onready var weapon_pivot: Marker2D = $WeaponPivot
 @onready var line_2d: Line2D = $Line2D
+@onready var wind_effect: AnimatedSprite2D = $WeaponPivot/AnimatedSprite2D/wind_effect
+
+
 var muzzle_velocity := 200.0   # Gun's muzzle velocity
 var custom_gravity := 500      # Gravity for the arc (for gun trajectory)
 var gravity_increase_rate := 100  # Increase gravity over time for a sharper fall
+@onready var actual_player_sprite: AnimatedSprite2D = $"../AnimatedSprite2D"
+@onready var player_node: CharacterBody2D = $".."
 
 ## gun.gd (excerpt)
 #const SPEED   = 200      # must match bullet.gd SPEED
 #const RANGE   = 100      # must match bullet.gd RANGE
 #const GRAVITY = 500.0    # must match bullet.gd GRAVITY
 
+var was_aiming = false
 var max_points := 200    # cap on how many points we'll draw
 var delta_time := 1/60.0 # assume 60fps for simulation step
 var aiming = false       # To track if the player is holding the right mouse button
+var charge_time := 0.0
+
 
 func _ready():
 	line_2d.hide()
@@ -57,12 +65,10 @@ func update_trajectory(delta):
 		if pos.y > get_viewport().get_visible_rect().size.y:
 			break
 
-
-
 # Rotate the weapon with the mouse cursor
 func _process(delta):
 	if player_ref == null or player_ref.is_dead:
-		# player is dead → keep the sprite visible, but do nothing
+		## player is dead → keep the sprite visible, but do nothing
 		return
 
 		# Rotate gun
@@ -73,14 +79,53 @@ func _process(delta):
 	if Input.is_action_just_pressed("shoot") and not kunai_thrown:
 		shoot()
 
-	# Aiming logic
-	if Input.is_action_pressed("teleport"):
+	# Aiming and charging logic
+	if Input.is_action_pressed("teleport") and player_node.is_on_floor_only():
 		aiming = true
+		animated_sprite_2d.rotation += WeaponSettings.SPEED * delta
+
+		player_node.disable_input()
+		if not was_aiming:
+
+			wind_effect.show()
+			wind_effect.play()
+			#$AudioStreamPlayer2D.play()
+		animated_sprite_2d.play("shuriken")
+		# Prevent overriding teleport animation
+		if not actual_player_sprite.animation == "smoke":
+			actual_player_sprite.play("charge")
+
 		line_2d.show()
+
+		# Increase charge time up to max
+		charge_time = clamp(charge_time + delta, 0.0, WeaponSettings.CHARGE_TIME)
+		var t = charge_time / WeaponSettings.CHARGE_TIME
+
+		# Scale speed and range linearly based on charge
+		WeaponSettings.SPEED = lerp(WeaponSettings.MIN_SPEED, WeaponSettings.MAX_SPEED, t)
+		WeaponSettings.RANGE = lerp(100.0, WeaponSettings.MAX_RANGE, t)
+
 		update_trajectory(delta)
+
 	else:
+		wind_effect.hide()
+		wind_effect.stop()
+		#$AudioStreamPlayer2D.stop()
+
+		animated_sprite_2d.play("shuriken")
+
+		player_node.enable_input()
 		aiming = false
 		line_2d.hide()
+
+		# Reset when done aiming
+		charge_time = 0.0
+		WeaponSettings.SPEED = WeaponSettings.MIN_SPEED
+		WeaponSettings.RANGE = 100.0
+
+	was_aiming = aiming
+
+
 
 # Shooting logic
 func shoot():
@@ -109,7 +154,6 @@ func shoot():
 	new_bullet.connect("teleport_ready", Callable(self, "_on_teleport_ready"))
 
 	#new_bullet.connect("kunai_destroyed", Callable(self, "_on_kunai_destroyed"))
-
 
 	get_tree().current_scene.add_child(new_bullet)
 	# Hide shuriken after shooting

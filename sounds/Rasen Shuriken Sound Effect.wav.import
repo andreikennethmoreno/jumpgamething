@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dafktcvonq4ne"
+path="res://.godot/imported/Rasen Shuriken Sound Effect.wav-96eb308ab290b2edf0755506e703695e.sample"
+
+[deps]
+
+source_file="res://sounds/Rasen Shuriken Sound Effect.wav"
+dest_files=["res://.godot/imported/Rasen Shuriken Sound Effect.wav-96eb308ab290b2edf0755506e703695e.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

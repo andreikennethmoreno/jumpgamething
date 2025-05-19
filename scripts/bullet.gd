@@ -23,13 +23,15 @@ signal kunai_hit_player
 signal teleport_ready(global_position)
 
 func _ready():
-	anim.play("spinning")
+	#anim.play("spinning")
+
 	print("Kunai is ready.")
 
 func set_velocity(new_velocity: Vector2):
 	velocity = new_velocity
 
 func _physics_process(delta):
+
 	if is_stuck or not is_ready_to_shoot:
 		return
 
@@ -42,6 +44,10 @@ func _physics_process(delta):
 	velocity.y += WeaponSettings.GRAVITY * delta
 	position += velocity * delta
 	travelled_distance += velocity.length() * delta
+
+	anim.rotation += WeaponSettings.SPEED * delta
+
+
 
 	if travelled_distance >= WeaponSettings.RANGE and not is_falling:
 		is_falling = true

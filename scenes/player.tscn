@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://bx05t6wg816ht"]
+[gd_scene load_steps=51 format=3 uid="uid://bx05t6wg816ht"]
 
 [ext_resource type="Texture2D" uid="uid://84aakmyhb5hl" path="res://sprites/anbu.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://b0wqrlal2rl0" path="res://scripts/player.gd" id="1_g2els"]
@@ -14,7 +14,15 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4ni07"]
 atlas = ExtResource("1_3vyb7")
-region = Rect2(64, 224, 32, 32)
+region = Rect2(0, 192, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l71n6"]
+atlas = ExtResource("1_3vyb7")
+region = Rect2(32, 192, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ke2ow"]
+atlas = ExtResource("1_3vyb7")
+region = Rect2(96, 192, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gl8cc"]
 atlas = ExtResource("1_3vyb7")
@@ -153,10 +161,16 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_4ni07")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l71n6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ke2ow")
 }],
 "loop": true,
 "name": &"charge",
-"speed": 5.0
+"speed": 1.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -331,10 +345,9 @@ position = Vector2(-1, -7)
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
-animation = &"death"
+animation = &"charge"
 autoplay = "idle"
-frame = 3
-frame_progress = 1.0
+frame_progress = 0.897248
 
 [node name="CharacterCollision" type="CollisionShape2D" parent="."]
 position = Vector2(0, -7)
