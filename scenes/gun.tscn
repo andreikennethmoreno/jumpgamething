@@ -121,7 +121,7 @@ shape = SubResource("CircleShape2D_og67c")
 
 [node name="ShootingPoint" type="Marker2D" parent="WeaponPivot"]
 unique_name_in_owner = true
-position = Vector2(12, -1.78814e-05)
+position = Vector2(12, 7.45786e-09)
 rotation = 0.00814009
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="WeaponPivot"]

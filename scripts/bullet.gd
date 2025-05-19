@@ -1,180 +1,162 @@
-extends Area2D #bullet.gd
+extends CharacterBody2D
 
-var travelled_distance = 0
-
-#const SPEED = 200
-#const RANGE = 100
-#const GRAVITY = 500.0
-
-var velocity = Vector2.ZERO
-var is_stuck = false
-var is_falling = false
-var is_ready_to_shoot = true
-var has_emitted_teleport = false
-
-@onready var tile_map: Node = $TileMap
-
-# Track bodies currently overlapping this kunai
-var bodies_inside: Array = []
-
-@onready var anim = $AnimatedSprite2D
-@onready var collision_shape: CollisionShape2D = $CollisionShape2D
-
-#signal kunai_destroyed
 signal kunai_hit_player
 signal teleport_ready(global_position)
 
-const FLOOR_STICK_DEPTH = 2
-const WALL_STICK_DEPTH = 2
+# --- Tunables (replace with your WeaponSettings if you like) ---
+const SPEED      := 200.0
+const RANGE      := 100.0
+const GRAVITY    := 500.0
+const FLOOR_DEPTH := 2.0
+const WALL_DEPTH  := 2.0
+
+# --- State ---
+var travelled_dist   := 0.0
+var is_stuck         := false
+var has_emitted_tp   := false
+var has_emitted_teleport = false
+
+@onready var anim    := $AnimatedSprite2D
+@onready var shape   := $CollisionShape2D
 
 func _ready():
-	#anim.play("spinning")
+	anim.play("spinning")
+	print("Kunai ready.")
 
-	print("Kunai is ready.")
+# NEW – pick a unique name
+func launch(dir: Vector2) -> void:
+	velocity = dir.normalized() * SPEED
 
-func set_velocity(new_velocity: Vector2):
-	velocity = new_velocity
-
-func _physics_process(delta):
-
-	if is_stuck or not is_ready_to_shoot:
+func _physics_process(delta: float) -> void:
+	if is_stuck :
 		return
 
-	if is_falling:
-		velocity.y += WeaponSettings.GRAVITY * delta
-		position += velocity * delta
-		return
 
-	# Regular flight
-	velocity.y += WeaponSettings.GRAVITY * delta
-	position += velocity * delta
-	travelled_distance += velocity.length() * delta
+	# apply gravity
+	velocity.y += GRAVITY * delta
 
-	anim.rotation += WeaponSettings.SPEED * delta
+	# handle flight vs. falling by range
+	if travelled_dist < RANGE:
+		travelled_dist += velocity.length() * delta
+	# after max range, just let it fall
+	# (same gravity code already handles arc)
 
+	# move and detect collision
+	var coll := move_and_collide(velocity * delta)
+	if coll:
+		_on_collision(coll)
+	else:
+		# keep spinning while in flight
+		anim.rotation += SPEED * delta
 
-
-	if travelled_distance >= WeaponSettings.RANGE and not is_falling:
-		is_falling = true
-
-	#if travelled_distance > WeaponSettings.RANGE:
-		#is_falling = true
-		#velocity = dir * WeaponSettings.SPEED
-		#velocity.y = 0
-		#anim.play("spinning")
-		#print("Kunai missed. Falling started.")
-
-# --- ENTRY/EXIT TRACKING ---
-func _on_body_entered(body: Node2D) -> void:
-
-	if not bodies_inside.has(body):
-		bodies_inside.append(body)
-		print(body.name, "entered kunai area.")
-
-	# If we hit the player directly on shoot
+func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body.name == "Player":
 		print("Kunai hit the player!")
+		TeleportManager.can_teleport = false
+		TeleportManager.teleport_target_position = Vector2.ZERO
 		emit_signal("kunai_hit_player")
 		queue_free()
 		return
 
-	# First time we hit anything → teleport target set
+
+
 	if not has_emitted_teleport:
 		emit_signal("teleport_ready", global_position)
 		has_emitted_teleport = true
-		print("teleport_ready emitted at ", global_position)
-		# Else: we’ve stuck into a wall/body
-		_stick_to(body)
+		print("bullet.gd: teleport_ready emitted at", global_position)
+
+	## Stick only if not already stuck
+	#if not is_stuck:
+		#_stick_to(body, Vector2.UP) # Optional: store normal if needed
 
 
-
-func _on_body_exited(body: Node2D) -> void:
-	if bodies_inside.has(body):
-		bodies_inside.erase(body)
-		print(body.name, "exited kunai area.")
+func _on_collision(coll: KinematicCollision2D) -> void:
+	var body = coll.get_collider()
+	var normal = coll.get_normal()
 
 
-
-
-func _stick_to(body: Node2D) -> void:
+	# Bounce logic for Metal
 	if body.name == "Metal":
-		print("bounceing off the wall")
+		# Reflect the velocity
+		velocity = velocity.bounce(normal)
 
+		# Add a small random angle (±15 degrees) to deflect it
+		var angle_offset_deg = randf_range(-15, 15)
+		velocity = velocity.rotated(deg_to_rad(angle_offset_deg))
+
+		# Dampen it more on bounce
+		velocity *= 0.75
+
+		print("Kunai bounced off Metal at angle ", angle_offset_deg, ", new velocity:", velocity)
+		return
+
+	if body.name == "Player":
+		emit_signal("kunai_hit_player")
+
+		# ✅ RESET teleport position
+		TeleportManager.can_teleport = false
+		TeleportManager.teleport_target_position = Vector2.ZERO
+
+		queue_free()
+		return
+
+	# first impact → teleport
+	#if not has_emitted_tp:
+		#emit_signal("teleport_ready", global_position)
+		#has_emitted_tp = true
+
+	if not is_stuck:
+		_stick_to(body, coll.get_normal())
+
+func _stick_to(body: Node, normal: Vector2) -> void:
 	is_stuck = true
-	is_falling = false
-
-	# Capture the incoming direction before zeroing velocity
-	var impact_dir = Vector2.ZERO
-	if velocity.length() > 0:
-		impact_dir = velocity.normalized()
-
 	velocity = Vector2.ZERO
 
-	print("Kunai stuck to: ", body.name)
-	_disable_previous_stuck()
-	add_to_group("stuck_bullets")
-
-	# Save transform
+	# detach rotation/position, then reparent under body
 	var hit_pos = global_position
 	var hit_rot = rotation
-
-	# Reparent under the hit body
 	get_parent().remove_child(self)
 	body.add_child(self)
 	global_position = hit_pos
 	rotation = hit_rot
 
-	# Determine if we hit a floor-ish or wall-ish surface by checking our rotation
-	var angle_deg = fposmod(rad_to_deg(rotation), 360.0)
-	if angle_deg > 180:
-		angle_deg -= 360  # map into -180..180
+	# choose depth offset based on surface angle
+	var is_wall = abs(normal.dot(Vector2.UP)) < 0.5
+	var depth = WALL_DEPTH if is_wall else FLOOR_DEPTH
 
-	# If rotated ~90 degrees, it's floor/ceiling; else it's a wall
-	var is_wall = abs(angle_deg) < 45.0 or abs(angle_deg) > 135.0
-	var offset_dist = WALL_STICK_DEPTH if is_wall else FLOOR_STICK_DEPTH
+	# nudge into surface
+	global_position -= normal * depth
 
-	if is_wall:
-		print("Sticking to wall logic")
-	else:
-		print("Sticking to floor logic")
-
-
-	# Nudge *into* the surface along the reverse impact direction
-	if impact_dir != Vector2.ZERO:
-		global_position = hit_pos - impact_dir * offset_dist
-	else:
-		# Fallback: if no velocity (e.g. teleported), just pull back along X-axis
-		global_position = hit_pos - Vector2.RIGHT.rotated(rotation) * offset_dist
-
-	# Disable collision now that we're stuck
-	$CollisionShape2D.disabled = true
+	# disable physics and shape
+	shape.disabled = true
 	anim.play("static")
-	_ready_for_new_shot()
 
+	print("Kunai stuck to ", body.name)
 
-
-
-func _disable_previous_stuck():
-	# Remove other stuck bullets on this body
-	for child in get_parent().get_children():
-		if child != self and child.is_in_group("stuck_bullets"):
-			get_parent().remove_child(child)
-			child.queue_free()
-			break
-
-func _ready_for_new_shot():
-	is_ready_to_shoot = true
-	print("Kunai ready for next shot.")
-
-
-# --- CALLED WHEN PLAYER TELEPORTS ---
 func try_retrieve_on_teleport(player: Node2D) -> void:
-	# If the player overlaps the stuck kunai, pick it up
-	if is_stuck and bodies_inside.has(player):
-		print("✅ Kunai retrieved by Player on teleport!")
-		_reset_kunai_for_next_shot()
+	if not is_stuck:
+		return
 
-func _reset_kunai_for_next_shot():
-	#emit_signal("kunai_destroyed")
-	# Put it back into the “gun” or respawn logic
-	queue_free()  # or you could hide & reset position/flags
+	# simple distance check instead of disabled shape
+	if player.global_position.distance_to(global_position) <= 16.0:
+		print("✅ Kunai retrieved!")
+
+		# 1) Reset kunai state so it won’t re-emit or stick again
+		is_stuck       = false
+		has_emitted_tp = false
+		travelled_dist = 0.0
+		shape.disabled = false
+		anim.play("spinning")
+
+		# 2) Clear your TeleportManager so you can't teleport again
+		TeleportManager.can_teleport            = false
+		TeleportManager.teleport_target_position = Vector2.ZERO
+
+		# 3) Reparent or free-and-recreate
+		# Option A: send it back into the gun
+		# get_parent().remove_child(self)
+		# yourGunNode.add_child(self)
+		# global_position = yourGunNode.shooting_point.global_position
+		#
+		# Option B: just free it and let the gun scene recreate it on next shot
+		queue_free()

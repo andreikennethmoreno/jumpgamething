@@ -25,7 +25,7 @@ var was_aiming = false
 var max_points := 200    # cap on how many points we'll draw
 var delta_time := 1/60.0 # assume 60fps for simulation step
 var aiming = false       # To track if the player is holding the right mouse button
-var charge_time := 0.0
+var charge_time := -1.0
 
 
 func _ready():
