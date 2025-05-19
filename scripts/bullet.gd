@@ -12,6 +12,8 @@ var is_falling = false
 var is_ready_to_shoot = true
 var has_emitted_teleport = false
 
+@onready var tile_map: Node = $TileMap
+
 # Track bodies currently overlapping this kunai
 var bodies_inside: Array = []
 
@@ -21,6 +23,9 @@ var bodies_inside: Array = []
 #signal kunai_destroyed
 signal kunai_hit_player
 signal teleport_ready(global_position)
+
+const FLOOR_STICK_DEPTH = 2
+const WALL_STICK_DEPTH = 2
 
 func _ready():
 	#anim.play("spinning")
@@ -78,8 +83,9 @@ func _on_body_entered(body: Node2D) -> void:
 		emit_signal("teleport_ready", global_position)
 		has_emitted_teleport = true
 		print("teleport_ready emitted at ", global_position)
-	# Else: we’ve stuck into a wall/body
-	_stick_to(body)
+		# Else: we’ve stuck into a wall/body
+		_stick_to(body)
+
 
 
 func _on_body_exited(body: Node2D) -> void:
@@ -88,11 +94,12 @@ func _on_body_exited(body: Node2D) -> void:
 		print(body.name, "exited kunai area.")
 
 
-const FLOOR_STICK_DEPTH = 2
-const WALL_STICK_DEPTH = 2
 
 
 func _stick_to(body: Node2D) -> void:
+	if body.name == "Metal":
+		print("bounceing off the wall")
+
 	is_stuck = true
 	is_falling = false
 
