@@ -1,7 +1,7 @@
 extends Camera2D
 
 
-const SCREEN_SIZE := Vector2( 448, 180 )
+const SCREEN_SIZE := Vector2( 430, 300 )
 var cur_screen := Vector2( 0, 0 )
 
 func _ready():

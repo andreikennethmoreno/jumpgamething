@@ -8,4 +8,4 @@ extends Area2D
 func _on_body_entered(body: Node2D) -> void:
 	print("potion.gd: adding +1 heart")
 	animation_player.play("pickup")
-	body.heal()
+	#body.heal()

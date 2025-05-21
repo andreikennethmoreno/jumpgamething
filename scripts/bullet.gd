@@ -58,13 +58,6 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 		queue_free()
 		return
 
-
-
-	if not has_emitted_teleport:
-		emit_signal("teleport_ready", global_position)
-		has_emitted_teleport = true
-		print("bullet.gd: teleport_ready emitted at", global_position)
-
 	## Stick only if not already stuck
 	#if not is_stuck:
 		#_stick_to(body, Vector2.UP) # Optional: store normal if needed
@@ -132,6 +125,13 @@ func _stick_to(body: Node, normal: Vector2) -> void:
 	anim.play("static")
 
 	print("Kunai stuck to ", body.name)
+
+
+	if not has_emitted_teleport:
+		emit_signal("teleport_ready", global_position)
+		has_emitted_teleport = true
+		print("bullet.gd: teleport_ready emitted at", global_position)
+
 
 func try_retrieve_on_teleport(player: Node2D) -> void:
 	if not is_stuck:

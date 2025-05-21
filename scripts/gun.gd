@@ -16,11 +16,6 @@ var gravity_increase_rate := 100  # Increase gravity over time for a sharper fal
 @onready var actual_player_sprite: AnimatedSprite2D = $"../AnimatedSprite2D"
 @onready var player_node: CharacterBody2D = $".."
 
-## gun.gd (excerpt)
-#const SPEED   = 200      # must match bullet.gd SPEED
-#const RANGE   = 100      # must match bullet.gd RANGE
-#const GRAVITY = 500.0    # must match bullet.gd GRAVITY
-
 var was_aiming = false
 var max_points := 200    # cap on how many points we'll draw
 var delta_time := 1/60.0 # assume 60fps for simulation step
