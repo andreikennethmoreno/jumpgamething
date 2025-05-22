@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://t0ss6hbxnach"
-path="res://.godot/imported/column.png-5a43d59184bd29784518bde9d66542c6.ctex"
+uid="uid://ccynkrr38ntsw"
+path="res://.godot/imported/wagon.png-c9f2aa8721d8653d4d26e47c7f0322f4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/ENVIRONMENT/column.png"
-dest_files=["res://.godot/imported/column.png-5a43d59184bd29784518bde9d66542c6.ctex"]
+source_file="res://sprites/environment_section2/props-sliced/wagon.png"
+dest_files=["res://.godot/imported/wagon.png-c9f2aa8721d8653d4d26e47c7f0322f4.ctex"]
 
 [params]
 

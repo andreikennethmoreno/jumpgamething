@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djqdwuwnhhnp4"
-path="res://.godot/imported/backgrounds.png-76e2aad37f38ea6ec785f45a9a5b0fbd.ctex"
+uid="uid://caste6dp7wf5a"
+path="res://.godot/imported/ground-corner.png-ab26bbd9eef771671d56d92a3539bd0f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/ENVIRONMENT/backgrounds.png"
-dest_files=["res://.godot/imported/backgrounds.png-76e2aad37f38ea6ec785f45a9a5b0fbd.ctex"]
+source_file="res://sprites/environment_section2/layers/sliced-tileset/ground-corner.png"
+dest_files=["res://.godot/imported/ground-corner.png-ab26bbd9eef771671d56d92a3539bd0f.ctex"]
 
 [params]
 
