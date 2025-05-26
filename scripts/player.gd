@@ -26,7 +26,7 @@ var _suffocating := false
 @onready var hit_sound: AudioStreamPlayer2D = $hit_sound
 
 func _ready():
-	#floor_max_angle = deg_to_rad(43)
+	floor_max_angle = deg_to_rad(42)
 	var hearts_parent = $healthbar/HBoxContainer
 	hearts_list = []  # Ensure it's empty before filling
 	for child in hearts_parent.get_children():
