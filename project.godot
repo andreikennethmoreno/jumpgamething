@@ -22,7 +22,7 @@ WeaponSettings="*res://scripts/WeaponSetting.gd"
 
 [display]
 
-window/size/viewport_width=864
+window/size/viewport_width=846
 window/size/viewport_height=720
 window/size/resizable=false
 window/stretch/mode="viewport"
