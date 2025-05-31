@@ -9,6 +9,7 @@ func _ready():
 	global_position = get_parent().global_position
 	_update_screen( cur_screen )
 
+
 func _physics_process(delta):
 	var parent_screen : Vector2 = ( get_parent().global_position / SCREEN_SIZE ).floor()
 	if not parent_screen.is_equal_approx( cur_screen ):
