@@ -367,6 +367,7 @@ shape = SubResource("CircleShape2D_ur7pv")
 stream = ExtResource("10_y4r1p")
 
 [node name="healthbar" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="HBoxContainer" type="HBoxContainer" parent="healthbar"]
 offset_right = 40.0
