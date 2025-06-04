@@ -18,7 +18,7 @@ gradient = SubResource("Gradient_xj4lg")
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_b7qs5"]
 particle_flag_disable_z = true
 emission_shape = 3
-emission_box_extents = Vector3(1000, 2400, 1)
+emission_box_extents = Vector3(1000, 5280, 1)
 spread = 10.0
 initial_velocity_min = 20.0
 initial_velocity_max = 80.0
@@ -35,5 +35,5 @@ texture_filter = 1
 material = SubResource("CanvasItemMaterial_xj4lg")
 amount = 2500
 texture = ExtResource("1_xj4lg")
-visibility_rect = Rect2(-500, -200, 1000, 2200)
+visibility_rect = Rect2(-500, -200, 1000, 5280)
 process_material = SubResource("ParticleProcessMaterial_b7qs5")

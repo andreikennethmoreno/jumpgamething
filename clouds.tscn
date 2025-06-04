@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://bhjmhu3jpgji3"]
+
+[ext_resource type="Shader" uid="uid://dnk2ckksapti4" path="res://clouds.gdshader" id="1_4xwbv"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_4xwbv"]
+frequency = 0.0075
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_4xwbv"]
+width = 846
+height = 720
+seamless = true
+seamless_blend_skirt = 0.75
+noise = SubResource("FastNoiseLite_4xwbv")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dl3so"]
+shader = ExtResource("1_4xwbv")
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_4xwbv")
+shader_parameter/density = 1.0
+shader_parameter/speed = Vector2(0.01, 0)
+shader_parameter/cloud_scale = 0.1
+
+[node name="clouds" type="ParallaxBackground"]
+layer = 1
+scroll_limit_begin = Vector2(7770, 0)
+scroll_ignore_camera_zoom = true
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="."]
+motion_mirroring = Vector2(6768, 5760)
+
+[node name="ColorRect" type="ColorRect" parent="ParallaxLayer"]
+material = SubResource("ShaderMaterial_dl3so")
+offset_right = 6768.0
+offset_bottom = 5760.0
