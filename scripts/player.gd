@@ -17,6 +17,9 @@ var hearts_list : Array[TextureRect] = []
 var health = 1
 var is_dead = false
 var _suffocating := false
+var started_fall = false
+var fall_distance = 0
+var splat_timer = 0.0
 
 
 @onready var gun: Area2D = $gun
@@ -26,8 +29,7 @@ var _suffocating := false
 @onready var hit_sound: AudioStreamPlayer2D = $hit_sound
 
 func _ready():
-	floor_max_angle = deg_to_rad(40
-	)
+	floor_max_angle = deg_to_rad(42)
 	var hearts_parent = $healthbar/HBoxContainer
 	hearts_list = []  # Ensure it's empty before filling
 	for child in hearts_parent.get_children():
@@ -35,11 +37,7 @@ func _ready():
 			hearts_list.append(child)
 	print("Hearts loaded:", hearts_list.size())
 	update_heart_display()
-
-
-
-	print(hearts_list)
-
+	#print(hearts_list)
 	print("gun is ready")
 	if gun:
 		print("Gun found, connecting teleport_ready signal.")
@@ -143,6 +141,26 @@ func _physics_process(delta: float) -> void:
 	elif direction < 0:
 		animated_sprite.flip_h = true
 
+	# Track fall distance only when in the air and falling down
+	if not is_on_floor() and velocity.y > 0:
+		fall_distance += velocity.y * delta
+	else:
+		# Reset when on the floor or going upward
+		fall_distance = 0
+
+	# Handle animation
+	if just_teleported:
+		animated_sprite.play("smoke")
+		smoke_timer -= delta
+		if smoke_timer <= 0:
+			animated_sprite.stop()
+			just_teleported = false
+		if gun:
+			gun.visible = false
+	else:
+		if gun:
+			gun.visible = true
+
 	# Handle animation
 	if just_teleported:
 		animated_sprite.play("smoke")
@@ -157,6 +175,10 @@ func _physics_process(delta: float) -> void:
 		if gun:
 			gun.visible = true
 
+		if splat_timer > 0:
+			splat_timer -= delta
+			return
+
 		if is_on_floor():
 			if direction == 0:
 				animated_sprite.play("idle")
@@ -170,6 +192,47 @@ func _physics_process(delta: float) -> void:
 		velocity.x = direction * SPEED
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
+
+	# Horizontal movement
+	if direction:
+		velocity.x = direction * SPEED
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+
+		# Update the highest posddadition (lowest y value)
+	if global_position.y < Save.highest_y_position:
+		Save.highest_y_position = global_position.y
+		var vertical_distance_up = Save.starting_y_position - Save.highest_y_position
+		print("Player height climbed: ", round(vertical_distance_up), " pixels")
+
+	# Skip fall logic if just teleported
+	if just_teleported:
+		started_fall = false
+		Save.fall_start_y = 0.0
+	else:
+		# Start tracking fall if falling down and not on the floor
+		if velocity.y > 0 and !is_on_floor() and !started_fall:
+			started_fall = true
+			Save.fall_start_y = global_position.y
+
+	if is_on_floor() and started_fall:
+		var fall_distance = global_position.y - Save.fall_start_y
+		if fall_distance > 150:
+			Save.fall_start_y = 0.0
+			Save.fall_count += 1
+
+			animated_sprite.play("splat")
+			splat_timer = 0.3
+
+			hit_sound.play()
+
+
+			print("Fall animation finished! Total falls:", Save.fall_count)
+			started_fall = false
+
+		else:
+			started_fall = false
+			Save.fall_start_y = 0.0
 
 	move_and_slide()
 

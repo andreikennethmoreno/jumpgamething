@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=3 uid="uid://bx05t6wg816ht"]
+[gd_scene load_steps=53 format=3 uid="uid://bx05t6wg816ht"]
 
 [ext_resource type="Texture2D" uid="uid://84aakmyhb5hl" path="res://sprites/anbu.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://b0wqrlal2rl0" path="res://scripts/player.gd" id="1_g2els"]
@@ -155,6 +155,14 @@ region = Rect2(192, 96, 32, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_i4ail"]
 atlas = ExtResource("1_3vyb7")
 region = Rect2(224, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hhpqf"]
+atlas = ExtResource("1_3vyb7")
+region = Rect2(96, 224, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jc3p3"]
+atlas = ExtResource("1_3vyb7")
+region = Rect2(96, 224, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_tuyoq"]
 animations = [{
@@ -320,6 +328,17 @@ animations = [{
 "loop": true,
 "name": &"smoke",
 "speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hhpqf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jc3p3")
+}],
+"loop": true,
+"name": &"splat",
+"speed": 1.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_y4r1p"]
@@ -335,7 +354,7 @@ collision_layer = 2
 slide_on_ceiling = false
 floor_stop_on_slope = false
 floor_constant_speed = true
-floor_max_angle = 0.698132
+floor_max_angle = 0.733038
 script = ExtResource("1_g2els")
 metadata/_edit_group_ = true
 
@@ -345,9 +364,9 @@ position = Vector2(0, -7)
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
-animation = &"charge"
+animation = &"splat"
 autoplay = "idle"
-frame_progress = 0.897248
+frame_progress = 0.52486
 
 [node name="CharacterCollision" type="CollisionShape2D" parent="."]
 position = Vector2(0, -7)

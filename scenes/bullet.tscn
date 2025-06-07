@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://dlmnyptka4ajk"]
+[gd_scene load_steps=9 format=3 uid="uid://dlmnyptka4ajk"]
 
 [ext_resource type="Script" uid="uid://c7dk5607ow2dw" path="res://scripts/bullet.gd" id="1_y25gk"]
 [ext_resource type="Texture2D" uid="uid://bovga3otceab2" path="res://sprites/shuriken.png" id="2_y25gk"]
+[ext_resource type="AudioStream" uid="uid://d3r2r3kflifvn" path="res://sounds/Metal hits - Sound Effect (SFX).wav" id="3_l5glv"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_l5glv"]
 atlas = ExtResource("2_y25gk")
@@ -62,5 +63,8 @@ light_mask = 0
 visibility_layer = 3
 shape = SubResource("CircleShape2D_y25gk")
 debug_color = Color(0.85527, 0.118651, 0.839697, 0.42)
+
+[node name="Metal" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_l5glv")
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

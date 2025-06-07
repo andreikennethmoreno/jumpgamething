@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 TeleportManager="*res://scripts/teleportManager.gd"
 WeaponSettings="*res://scripts/WeaponSetting.gd"
+Save="*res://scripts/Save.gd"
 
 [display]
 

@@ -72,7 +72,7 @@ func _on_collision(coll: KinematicCollision2D) -> void:
 	if body.name == "Metal":
 		# Reflect the velocity
 		velocity = velocity.bounce(normal)
-
+		$Metal.play()
 		# Add a small random angle (±15 degrees) to deflect it
 		var angle_offset_deg = randf_range(-15, 15)
 		velocity = velocity.rotated(deg_to_rad(angle_offset_deg))
