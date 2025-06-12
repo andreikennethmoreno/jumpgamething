@@ -28,37 +28,38 @@ func _ready():
 
 
 func update_trajectory(delta):
-	line_2d.clear_points()
+	if Save.goal_count != 1:
+		line_2d.clear_points()
 
-	var start_pos = shooting_point.global_position
-	var pos = start_pos
-	var dir = weapon_pivot.global_transform.x.normalized()
+		var start_pos = shooting_point.global_position
+		var pos = start_pos
+		var dir = weapon_pivot.global_transform.x.normalized()
 
-	var velocity = dir * WeaponSettings.SPEED
-	velocity.y += WeaponSettings.LAUNCH_Y_VELOCITY
+		var velocity = dir * WeaponSettings.SPEED
+		velocity.y += WeaponSettings.LAUNCH_Y_VELOCITY
 
-	var space_state = get_world_2d().direct_space_state
-	var travelled = 0.0
+		var space_state = get_world_2d().direct_space_state
+		var travelled = 0.0
 
-	for i in range(max_points):
-		velocity.y += WeaponSettings.GRAVITY * delta_time
-		var next_pos = pos + velocity * delta_time
+		for i in range(max_points):
+			velocity.y += WeaponSettings.GRAVITY * delta_time
+			var next_pos = pos + velocity * delta_time
 
-		var query = PhysicsRayQueryParameters2D.create(pos, next_pos)
-		query.exclude = [self]
-		query.collision_mask = 1
+			var query = PhysicsRayQueryParameters2D.create(pos, next_pos)
+			query.exclude = [self]
+			query.collision_mask = 1
 
-		var result = space_state.intersect_ray(query)
-		if result:
-			line_2d.add_point(line_2d.to_local(result.position))
-			break
-		else:
-			line_2d.add_point(line_2d.to_local(next_pos))
-			pos = next_pos
-			travelled += (next_pos - pos).length()
+			var result = space_state.intersect_ray(query)
+			if result:
+				line_2d.add_point(line_2d.to_local(result.position))
+				break
+			else:
+				line_2d.add_point(line_2d.to_local(next_pos))
+				pos = next_pos
+				travelled += (next_pos - pos).length()
 
-		if pos.y > get_viewport().get_visible_rect().size.y:
-			break
+			if pos.y > get_viewport().get_visible_rect().size.y:
+				break
 
 # Rotate the weapon with the mouse cursor
 func _process(delta):

@@ -40,7 +40,7 @@ func format_time(seconds: float) -> String:
 
 func _ready():
 	Save.is_playing = true
-	floor_max_angle = deg_to_rad(42)
+	floor_max_angle = deg_to_rad(43)
 	var hearts_parent = $healthbar/HBoxContainer
 	hearts_list = []  # Ensure it's empty before filling
 	for child in hearts_parent.get_children():

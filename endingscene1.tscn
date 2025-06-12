@@ -1,0 +1,81 @@
+[gd_scene load_steps=6 format=3 uid="uid://cfnh0fu3gjfun"]
+
+[ext_resource type="Script" uid="uid://4fjnor55ydc6" path="res://scripts/endingscene1.gd" id="1_6a71u"]
+[ext_resource type="FontFile" uid="uid://dyfcb1a1dddnn" path="res://fonts/PixelOperator8.ttf" id="2_mktet"]
+
+[sub_resource type="Animation" id="Animation_cdf8s"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Label:visible_ratio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_cwjs1"]
+resource_name = "typewriter_text"
+length = 4.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Label:visible_ratio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hfw5c"]
+_data = {
+&"RESET": SubResource("Animation_cdf8s"),
+&"typewriter_text": SubResource("Animation_cwjs1")
+}
+
+[node name="Endingscene1" type="Node"]
+script = ExtResource("1_6a71u")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -284.0
+offset_top = -125.0
+offset_right = 280.0
+offset_bottom = 126.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("2_mktet")
+theme_override_font_sizes/font_size = 24
+text = "Lorem ipusm this is sa sample test very long yes. i just want to say that its been a while and ive been working on thsi game for so long that ive become numb . but now its nice to feel thtat im able to excel at anything . this is exactly waht i needed and beacause of it i will be strong , sstronger than i am now. this  programming thing is a just an obstacle. and beasue of it . i will do waht ti takes."
+horizontal_alignment = 3
+autowrap_mode = 2
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_hfw5c")
+}
+autoplay = "typewriter_text"
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

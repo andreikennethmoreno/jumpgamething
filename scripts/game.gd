@@ -25,7 +25,11 @@ func _process(delta: float) -> void:
 		print("Number of falls: ", Save.fall_count)
 		print("Number of teleports: ", Save.teleport_count)
 		print("____________________________")
-		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+		Save.goal_count += 1
+		if Save.goal_count == 1:
+			get_tree().change_scene_to_file("res://endingscene1.tscn")
+		else:
+			get_tree().change_scene_to_file("res://scenes/endingscene2.tscn")
 
 
 func _on_goal_body_entered(body: Node2D) -> void:

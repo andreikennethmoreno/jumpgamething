@@ -355,7 +355,7 @@ collision_layer = 2
 slide_on_ceiling = false
 floor_stop_on_slope = false
 floor_constant_speed = true
-floor_max_angle = 0.733038
+floor_max_angle = 0.750492
 script = ExtResource("1_g2els")
 metadata/_edit_group_ = true
 
