@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cdxs655p0210o"]
+
+[ext_resource type="AudioStream" uid="uid://dvfiu2djxu8xe" path="res://music/sinnesloschen-beam-117362 - Copy.mp3" id="1_nbeep"]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer"]
+stream = ExtResource("1_nbeep")
+volume_db = -12.748
+autoplay = true

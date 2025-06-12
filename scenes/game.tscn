@@ -1,16 +1,19 @@
-[gd_scene load_steps=102 format=4 uid="uid://uhulcxy0lu23"]
+[gd_scene load_steps=107 format=4 uid="uid://uhulcxy0lu23"]
 
 [ext_resource type="Script" uid="uid://kc4ceuygrwcs" path="res://scripts/game.gd" id="1_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://bx05t6wg816ht" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="Texture2D" uid="uid://u1x1it3d1y7r" path="res://black.jpg" id="2_ir15t"]
 [ext_resource type="Texture2D" uid="uid://bf07s578la5jp" path="res://sprites/world_tileset.png" id="2_yqjtg"]
 [ext_resource type="Shader" uid="uid://u6yog8koce6k" path="res://scenes/game.gdshader" id="3_gee14"]
+[ext_resource type="PackedScene" uid="uid://doxq12b5fshgs" path="res://scenes/Goal.tscn" id="3_gxtfn"]
 [ext_resource type="Texture2D" uid="uid://b1uw1kirowrtu" path="res://sprites/ENVIRONMENT_section1/tileset.png" id="3_u5sy4"]
 [ext_resource type="Texture2D" uid="uid://csl060vxapxjx" path="res://sprites/environment_section2/layers/tileset - Copy.png" id="4_0tnpc"]
+[ext_resource type="PackedScene" uid="uid://cdxs655p0210o" path="res://scenes/audio_stream_player.tscn" id="5_qouja"]
 [ext_resource type="PackedScene" uid="uid://b3nkugaamj7af" path="res://fog.tscn" id="5_trtic"]
 [ext_resource type="Script" uid="uid://cioe5sbeu8o87" path="res://scenes/transition_camera.gd" id="5_u5sy4"]
 [ext_resource type="Texture2D" uid="uid://djqdwuwnhhnp4" path="res://sprites/ENVIRONMENT_section1/backgrounds.png" id="6_kvuet"]
 [ext_resource type="PackedScene" uid="uid://ghe2ctwu642i" path="res://scenes/health_potion.tscn" id="6_p57ef"]
+[ext_resource type="PackedScene" uid="uid://u8ooejwmote4" path="res://scenes/how-to-play-label.tscn" id="7_wljb1"]
 [ext_resource type="Texture2D" uid="uid://cdx683foav743" path="res://sprites/environment_section2/layers/tileset.png" id="8_0tnpc"]
 [ext_resource type="Texture2D" uid="uid://dtqet4qjmaf7v" path="res://sprites/Environment_section3/tileset.png" id="9_vtaks"]
 [ext_resource type="Texture2D" uid="uid://cusfu4mep0k2u" path="res://sprites/Environments_section4/modular-tileset.png" id="10_kvpfn"]
@@ -30,6 +33,10 @@
 [ext_resource type="PackedScene" path="res://scenes/props-section3.tscn" id="23_suyxu"]
 [ext_resource type="Texture2D" uid="uid://b7ph2sxhfx2jn" path="res://sprites/Environments_section4/blue_to_orange_gradient.png" id="25_bhx41"]
 [ext_resource type="Texture2D" uid="uid://c1xpyxshfgtr4" path="res://sprites/Environments_section4/sunset_bg.png" id="25_pl11u"]
+[ext_resource type="PackedScene" path="res://scenes/mirror_node.tscn" id="34_02fa5"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_nepv3"]
+radius = 44.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yqjtg"]
 texture = ExtResource("2_yqjtg")
@@ -5613,16 +5620,28 @@ z_index = -200
 scale = Vector2(1.1183, 1.15851)
 texture = ExtResource("2_ir15t")
 
+[node name="Goal" parent="." instance=ExtResource("3_gxtfn")]
+script = null
+
+[node name="goal_collision" type="CollisionShape2D" parent="Goal"]
+light_mask = 3
+visibility_layer = 3
+z_index = 2
+position = Vector2(217, -10425)
+shape = SubResource("CircleShape2D_nepv3")
+
 [node name="TileMap" type="Node" parent="."]
 
 [node name="Player" parent="TileMap" instance=ExtResource("1_uwrxv")]
-position = Vector2(-340, -226)
+position = Vector2(262, -10389)
 
 [node name="transition_camera" type="Camera2D" parent="TileMap/Player"]
 position = Vector2(0, -13)
 zoom = Vector2(2, 2)
 position_smoothing_enabled = true
 script = ExtResource("5_u5sy4")
+
+[node name="AudioStreamPlayer" parent="TileMap/Player" instance=ExtResource("5_qouja")]
 
 [node name="sample_room" type="Node" parent="TileMap"]
 
@@ -5659,9 +5678,6 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.099, 0.10495, 0.15, 1)
 metadata/_edit_lock_ = true
-
-[node name="ParallaxBackground" parent="TileMap/SECTION_1" instance=ExtResource("5_trtic")]
-layer = -60
 
 [node name="Midground" type="TileMapLayer" parent="TileMap/SECTION_1"]
 material = SubResource("ShaderMaterial_kvuet")
@@ -5713,6 +5729,11 @@ tile_map_data = PackedByteArray("AAAGAP3/AQAGAAAAAAAGAP7/AQAGAAEAAAAGAP//AQAGAAI
 tile_set = SubResource("TileSet_h3rex")
 
 [node name="Props - Section1" parent="TileMap/SECTION_1" instance=ExtResource("18_sww3w")]
+
+[node name="ParallaxBackground" parent="TileMap/SECTION_1" instance=ExtResource("5_trtic")]
+layer = -60
+
+[node name="stats_section" parent="TileMap/SECTION_1" instance=ExtResource("7_wljb1")]
 
 [node name="SECTION_2" type="Node" parent="TileMap"]
 
@@ -5927,6 +5948,8 @@ tile_map_data = PackedByteArray("AAALAMT9AAAIAAYAAAAMAMf9AAAIAAYAAAAMAMj9AAAJAAk
 tile_set = SubResource("TileSet_8ool0")
 metadata/_edit_lock_ = true
 
+[node name="MIrrorNode" parent="." instance=ExtResource("34_02fa5")]
+
 [node name="potions" type="Node" parent="."]
 
 [node name="health_potion8" parent="potions" instance=ExtResource("6_p57ef")]
@@ -5975,3 +5998,6 @@ position = Vector2(288, 9)
 build_mode = 1
 polygon = PackedVector2Array(-8, 0, -8, -9048, 1184, -10680, 1088, -40)
 metadata/_edit_lock_ = true
+
+[connection signal="body_entered" from="Goal" to="." method="_on_goal_body_entered"]
+[connection signal="body_exited" from="Goal" to="." method="_on_goal_body_exited"]

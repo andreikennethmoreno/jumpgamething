@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=3 uid="uid://bx05t6wg816ht"]
+[gd_scene load_steps=54 format=3 uid="uid://bx05t6wg816ht"]
 
 [ext_resource type="Texture2D" uid="uid://84aakmyhb5hl" path="res://sprites/anbu.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://b0wqrlal2rl0" path="res://scripts/player.gd" id="1_g2els"]
@@ -11,6 +11,7 @@
 [ext_resource type="AudioStream" uid="uid://b03qjt4fnsukt" path="res://sounds/hit_sound.wav" id="10_y4r1p"]
 [ext_resource type="PackedScene" uid="uid://b60762hp8imcc" path="res://scenes/heart.tscn" id="11_d2wvv"]
 [ext_resource type="Texture2D" uid="uid://cyel1lglibfb" path="res://sprites/smoke_FX002/FX002_08.png" id="11_fulsm"]
+[ext_resource type="PackedScene" uid="uid://bdo31r2atnr2u" path="res://scenes/pause_menu.tscn" id="12_3v2ag"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4ni07"]
 atlas = ExtResource("1_3vyb7")
@@ -386,9 +387,9 @@ shape = SubResource("CircleShape2D_ur7pv")
 stream = ExtResource("10_y4r1p")
 
 [node name="healthbar" type="CanvasLayer" parent="."]
-visible = false
 
 [node name="HBoxContainer" type="HBoxContainer" parent="healthbar"]
+visible = false
 offset_right = 40.0
 offset_bottom = 40.0
 
@@ -445,6 +446,8 @@ custom_minimum_size = Vector2(45.255, 0)
 layout_mode = 2
 
 [node name="heart" parent="healthbar/HBoxContainer/heart9" instance=ExtResource("11_d2wvv")]
+
+[node name="PauseMenu" parent="healthbar" instance=ExtResource("12_3v2ag")]
 
 [node name="DeathTimer" type="Timer" parent="."]
 wait_time = 3.0

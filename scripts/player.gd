@@ -9,7 +9,7 @@ var can_teleport = false
 var teleport_cooldown: float = 0  # Cooldown after teleportation
 var teleport_timer: float = 0.0
 var smoke_timer: float = 0.0  # Timer to control the smoke animation duration
-var smoke_duration: float = 0.1  # How adlong smoke animation should play
+var smoke_duration: float = 0.1  # How dadlong smoke animation should play
 var is_hit = false
 var knockback_timer := 0.3
 var just_teleported = false
@@ -27,8 +27,19 @@ var splat_timer = 0.0
 @onready var player_collision: CollisionShape2D = $CollisionShape2D
 @onready var smoke_effect: AudioStreamPlayer2D = $smoke_effect
 @onready var hit_sound: AudioStreamPlayer2D = $hit_sound
+@onready var stats_section: Label = $healthbar/stats_section
+
+func format_time(seconds: float) -> String:
+	var total_seconds = int(seconds)
+	var h = total_seconds / 3600
+	var m = (total_seconds % 3600) / 60
+	var s = total_seconds % 60
+	return "%02d:%02d:%02d" % [h, m, s]
+
+
 
 func _ready():
+	Save.is_playing = true
 	floor_max_angle = deg_to_rad(42)
 	var hearts_parent = $healthbar/HBoxContainer
 	hearts_list = []  # Ensure it's empty before filling
@@ -59,6 +70,10 @@ func _on_teleport_ready(pos: Vector2):
 		print("Teleport already allowed, ignoring additional signal.")
 
 func _physics_process(delta: float) -> void:
+	var formatted_time = format_time(Save.play_timer)
+	var height_meters = "%.2f" % abs(Save.highest_y_position)
+
+
 	var player_position = global_position
 
 	# Get mouse position relative to the screen
@@ -123,7 +138,7 @@ func _physics_process(delta: float) -> void:
 		just_teleported = true
 		smoke_effect.play()
 		gun.visible = false  # hide while in smoke
-
+		Save.teleport_count += 1
 		for kunai in get_tree().get_nodes_in_group("stuck_bullets"):
 			kunai.try_retrieve_on_teleport(self)
 	# Jump

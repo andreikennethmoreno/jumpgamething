@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=3 uid="uid://u8ooejwmote4"]
+
+[ext_resource type="FontFile" uid="uid://dyfcb1a1dddnn" path="res://fonts/PixelOperator8.ttf" id="1_1ktht"]
+
+[node name="stats_section" type="Label"]
+z_index = -59
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -348.0
+offset_top = -945.0
+offset_right = -50.0
+offset_bottom = -747.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_vertical = 8
+theme_override_fonts/font = ExtResource("1_1ktht")
+theme_override_font_sizes/font_size = 8
+text = "🧿 Hold Right Mouse = Aim
+🎯 Left Click = Shoot (while aiming)
+🚫 *Careful teleporting to the ceiling —
+ you might suffocate!"
