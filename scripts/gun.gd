@@ -9,12 +9,16 @@ var teleport_target_position: Vector2 = Vector2.ZERO  # Declare teleport_target_
 @onready var line_2d: Line2D = $Line2D
 @onready var wind_effect: AnimatedSprite2D = $WeaponPivot/AnimatedSprite2D/wind_effect
 
+@onready var point_of_throw: ColorRect = $WeaponPivot/point_of_throw
 
 var muzzle_velocity := 200.0   # Gun's muzzle velocity
 var custom_gravity := 500      # Gravity for the arc (for gun trajectory)
 var gravity_increase_rate := 100  # Increase gravity over time for a sharper fall
-@onready var actual_player_sprite: AnimatedSprite2D = $"../AnimatedSprite2D"
 @onready var player_node: CharacterBody2D = $".."
+@onready var  normal_animated_sprites: AnimatedSprite2D = $"../normal_animated_sprites"
+@onready var  pro_animated_sprites: AnimatedSprite2D = $"../pro_animated_sprites"
+
+@onready var  actual_player_sprite: AnimatedSprite2D = $"../normal_animated_sprites"
 
 var was_aiming = false
 var max_points := 200    # cap on how many points we'll draw
@@ -23,7 +27,20 @@ var aiming = false       # To track if the player is holding the right mouse but
 var charge_time := -1.0
 
 
+
+
+func _update_sprite_mode():
+	if Save.goal_count != 1:
+		normal_animated_sprites.visible = true
+		pro_animated_sprites.visible = false
+		actual_player_sprite = normal_animated_sprites
+	else:
+		normal_animated_sprites.visible = false
+		pro_animated_sprites.visible = true
+		actual_player_sprite = pro_animated_sprites
+
 func _ready():
+	_update_sprite_mode()
 	line_2d.hide()
 
 
@@ -63,6 +80,12 @@ func update_trajectory(delta):
 
 # Rotate the weapon with the mouse cursor
 func _process(delta):
+	if Save.goal_count == 1:
+		point_of_throw.show()
+	else:
+		point_of_throw.hide()
+	_update_sprite_mode()
+
 	if player_ref == null or player_ref.is_dead:
 		## player is dead → keep the sprite visible, but do nothing
 		return

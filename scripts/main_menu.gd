@@ -1,5 +1,6 @@
 extends Control
 
+@onready var mainmenu_bgmusic: AudioStreamPlayer = $mainmenu_bgmusic
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -20,7 +21,7 @@ func _on_start_pressed() -> void:
 	tween.connect("finished", Callable(self, "_on_black_screen_fade_complete"))
 
 func _on_black_screen_fade_complete():
-	get_tree().change_scene_to_file("res://scenes/game.tscn")
+	get_tree().change_scene_to_file("res://opening_scene.tscn")
 
 func _on_exit_pressed() -> void:
-	get_tree().quit
+	get_tree().quit()

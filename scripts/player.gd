@@ -21,13 +21,18 @@ var started_fall = false
 var fall_distance = 0
 var splat_timer = 0.0
 
-
 @onready var gun: Area2D = $gun
-@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+#@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var animated_sprite: AnimatedSprite2D = $normal_animated_sprites
+
+
 @onready var player_collision: CollisionShape2D = $CollisionShape2D
 @onready var smoke_effect: AudioStreamPlayer2D = $smoke_effect
 @onready var hit_sound: AudioStreamPlayer2D = $hit_sound
 @onready var stats_section: Label = $healthbar/stats_section
+@onready var normal_animated_sprites: AnimatedSprite2D = $normal_animated_sprites
+@onready var pro_animated_sprites: AnimatedSprite2D = $pro_animated_sprites
+
 
 func format_time(seconds: float) -> String:
 	var total_seconds = int(seconds)
@@ -37,10 +42,22 @@ func format_time(seconds: float) -> String:
 	return "%02d:%02d:%02d" % [h, m, s]
 
 
+func _update_sprite_mode():
+	if Save.goal_count != 1:
+		normal_animated_sprites.visible = true
+		pro_animated_sprites.visible = false
+		animated_sprite = normal_animated_sprites
+	else:
+		normal_animated_sprites.visible = false
+		pro_animated_sprites.visible = true
+		animated_sprite = pro_animated_sprites
+
 
 func _ready():
+	_update_sprite_mode()
+
 	Save.is_playing = true
-	floor_max_angle = deg_to_rad(43)
+	floor_max_angle = deg_to_rad(42)
 	var hearts_parent = $healthbar/HBoxContainer
 	hearts_list = []  # Ensure it's empty before filling
 	for child in hearts_parent.get_children():
@@ -70,6 +87,8 @@ func _on_teleport_ready(pos: Vector2):
 		print("Teleport already allowed, ignoring additional signal.")
 
 func _physics_process(delta: float) -> void:
+	_update_sprite_mode()
+
 	var formatted_time = format_time(Save.play_timer)
 	var height_meters = "%.2f" % abs(Save.highest_y_position)
 
@@ -163,18 +182,6 @@ func _physics_process(delta: float) -> void:
 		# Reset when on the floor or going upward
 		fall_distance = 0
 
-	# Handle animation
-	if just_teleported:
-		animated_sprite.play("smoke")
-		smoke_timer -= delta
-		if smoke_timer <= 0:
-			animated_sprite.stop()
-			just_teleported = false
-		if gun:
-			gun.visible = false
-	else:
-		if gun:
-			gun.visible = true
 
 	# Handle animation
 	if just_teleported:

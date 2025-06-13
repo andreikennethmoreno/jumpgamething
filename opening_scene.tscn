@@ -1,8 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://cf688iovcgfhu"]
+[gd_scene load_steps=6 format=3 uid="uid://2xp4fpchs5mc"]
 
-[ext_resource type="FontFile" uid="uid://dyfcb1a1dddnn" path="res://fonts/PixelOperator8.ttf" id="1_owuxe"]
-[ext_resource type="Script" uid="uid://enowlp8ugngv" path="res://scripts/endingscene_2.gd" id="1_q0icq"]
-[ext_resource type="PackedScene" uid="uid://bnnfsivpkaf4v" path="res://cherryblossom_particles.tscn" id="3_p8qvc"]
+[ext_resource type="Script" uid="uid://4w036b8md2cv" path="res://scripts/opening_scene.gd" id="1_60xhg"]
+[ext_resource type="FontFile" uid="uid://dyfcb1a1dddnn" path="res://fonts/PixelOperator8.ttf" id="2_x7dql"]
 
 [sub_resource type="Animation" id="Animation_cdf8s"]
 length = 0.001
@@ -41,8 +40,8 @@ _data = {
 &"typewriter_text": SubResource("Animation_cwjs1")
 }
 
-[node name="endingscene2" type="Node"]
-script = ExtResource("1_q0icq")
+[node name="OpeningScene" type="Node"]
+script = ExtResource("1_60xhg")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchors_preset = 15
@@ -59,17 +58,19 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -279.0
-offset_top = -48.0
+offset_top = -64.0
 offset_right = 285.0
-offset_bottom = 203.0
+offset_bottom = 187.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
-theme_override_fonts/font = ExtResource("1_owuxe")
+size_flags_vertical = 0
+theme_override_fonts/font = ExtResource("2_x7dql")
 theme_override_font_sizes/font_size = 24
-text = "This climb wasn’t for them.
+text = "“She climbs, not for revenge — but to remember who she was beneath the mask.”
 
-This was always yours."
+"
+horizontal_alignment = 1
 autowrap_mode = 2
 visible_characters = 0
 visible_ratio = 0.0
@@ -79,7 +80,5 @@ libraries = {
 &"": SubResource("AnimationLibrary_hfw5c")
 }
 autoplay = "typewriter_text"
-
-[node name="cherryblossom_particles" parent="." instance=ExtResource("3_p8qvc")]
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

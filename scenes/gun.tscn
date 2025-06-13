@@ -116,13 +116,22 @@ script = ExtResource("1_og67c")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(7, 0)
 shape = SubResource("CircleShape2D_og67c")
+metadata/_edit_lock_ = true
 
 [node name="WeaponPivot" type="Marker2D" parent="."]
+metadata/_edit_lock_ = true
 
 [node name="ShootingPoint" type="Marker2D" parent="WeaponPivot"]
 unique_name_in_owner = true
 position = Vector2(12, 7.45786e-09)
 rotation = 0.00814009
+metadata/_edit_lock_ = true
+
+[node name="point_of_throw" type="ColorRect" parent="WeaponPivot"]
+offset_left = 20.0
+offset_right = 21.0
+offset_bottom = 1.0
+rotation = -0.797362
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="WeaponPivot"]
 position = Vector2(7, 0)
@@ -130,7 +139,7 @@ rotation = -1.5708
 sprite_frames = SubResource("SpriteFrames_qd4js")
 animation = &"charging_shuriken"
 autoplay = "shuriken"
-frame_progress = 0.693891
+metadata/_edit_lock_ = true
 
 [node name="wind_effect" type="AnimatedSprite2D" parent="WeaponPivot/AnimatedSprite2D"]
 z_index = -1
@@ -140,6 +149,7 @@ sprite_frames = SubResource("SpriteFrames_dfoub")
 animation = &"wind"
 frame = 4
 frame_progress = 1.0
+metadata/_edit_lock_ = true
 
 [node name="Line2D" type="Line2D" parent="."]
 texture_repeat = 2
@@ -148,9 +158,11 @@ points = PackedVector2Array(0, -1, 0, -1)
 width = 2.0
 texture = ExtResource("3_gp1hk")
 texture_mode = 1
+metadata/_edit_lock_ = true
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = SubResource("AudioStreamMP3_qd4js")
 volume_db = -29.347
+metadata/_edit_lock_ = true
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -2,6 +2,17 @@ extends Node2D
 @onready var resume: Control = $TileMap/Player/Resume
 
 var player_inside := false  # track if player is inside the finish zone
+@onready var reflect_label: Label = $TileMap/SECTION_5/reflect_label
+@onready var sunset_label: Label = $TileMap/SECTION_5/sunset_label
+@onready var how_to_label: Label = $TileMap/SECTION_1/how_to_label
+
+func _ready():
+	reflect_label.visible = false
+	sunset_label.visible = false
+
+	# Hide how-to label only on second+ climb
+	if Save.goal_count == 1:
+		how_to_label.visible = false
 
 
 func format_time(seconds: float) -> String:
@@ -10,6 +21,8 @@ func format_time(seconds: float) -> String:
 	var m = (total_seconds % 3600) / 60
 	var s = total_seconds % 60
 	return "%02d:%02d:%02d" % [h, m, s]
+
+
 
 
 
@@ -36,9 +49,20 @@ func _on_goal_body_entered(body: Node2D) -> void:
 	if body.name == "Player":
 		player_inside = true
 		print("Player reached the finish zone!")
-
-
+		reflect_label.visible = true  # Show label
 
 func _on_goal_body_exited(body: Node2D) -> void:
 	if body.name == "Player":
 		player_inside = false
+		reflect_label.visible = false  # Hide label
+
+func _on_sunset_body_entered(body: Node2D) -> void:
+	if body.name == "Player":
+		sunset_label.visible = true
+		print("Player entered the sunset zone!")
+
+func _on_sunset_body_exited(body: Node2D) -> void:
+	print(body.name)
+	if body.name == "Player":
+		sunset_label.visible = false
+		print("Player exited the sunset zone!")

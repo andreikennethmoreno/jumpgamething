@@ -10,11 +10,7 @@ func _ready() -> void:
 	#animation_player.connect("animation_finished", Callable(self, "_on_animation_player_animation_finished"))
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
-	print(anim_name)
 	if anim_name == "typewriter_text":
 		text_finished = true
-	print("Number of goals: ", Save.goal_count)
-
-func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("ui_accept") and text_finished:
+		await get_tree().create_timer(3.0).timeout
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
